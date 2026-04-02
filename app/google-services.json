@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "960871076699",
+    "project_id": "vibecheck-d5415",
+    "storage_bucket": "vibecheck-d5415.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960871076699:android:b415392edfd70e1534c07e",
+        "android_client_info": {
+          "package_name": "com.example.eventplanner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8edybeVKKd9yE2bvjk0FZ5y-jZpDpGsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

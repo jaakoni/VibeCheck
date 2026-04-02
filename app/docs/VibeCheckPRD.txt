@@ -1,0 +1,87 @@
+﻿PRD: VibeCheck
+Authors: Gemini | Status: Draft
+Overview (TL;DR)
+VibeCheck is an event aggregator platform that allows users to input a city and a date range (up to 7 days) to find public events across a wide cultural spectrum. The app acts as a central hub, scraping and indexing data from major platforms (Eventbrite, Posh, etc.) and presenting them in a searchable, filterable interface with dedicated event detail pages.
+Outcome
+Users will experience a 3-step flow to discover and plan their outings:
+1. Global Search: Input destination and timing.
+2. Discovery & Filtering: A comprehensive list of events filterable by day and category.
+3. Deep Dive: Dedicated event pages with full details, weather, and one-click navigation.
+________________
+
+
+User Requirements - MVP (The UI Flow)
+Step
+	Screen
+	User Action / Flow
+	MVP?
+	1
+	Search Home
+	User enters a City and selects a Date Range (Max 7 days).
+	Yes
+	2
+	Search Results
+	User views a master list of all events. They can Filter by specific Day or any of the 10 Categories.
+	Yes
+	3
+	Event Detail Page
+	User clicks an event to see: Name, Location, Cost, Description, Link, "Get Here" button, and Weather.
+	Yes
+	________________
+
+
+Technical Functional Requirements
+Feature
+	Requirement
+	Technical Implementation
+	Data Aggregation
+	Multi-Source Scraping
+	System must scrape/API-fetch from Eventbrite, Posh, Ticketmaster, Luma, and Meetup based on city and date_range. All of the event data on the event detail page is scraped from these sites. The sites must be scraped once every 12 hours.
+	Categorization
+	Spectrum Tagging
+	Logic must categorize every event into one of the 10 defined categories (Nightlife, Family, etc.) based on metadata.
+	Location Services
+	Geocoding
+	Convert user-entered City string into Lat/Long coordinates to power weather and map queries.
+	Weather Integration
+	NWS API Support
+	Fetch specific daily forecasts from the National Weather Service using geocoded coordinates for the Event Detail page.
+	Navigation
+	Deep Linking
+	The "Get Here" button must generate a universal Google Maps URL using the verified event address.
+	Data Integrity
+	Event Verification
+	System must validate that every event has a physical address and a valid source URL before displaying.
+	Performance
+	Filtering Logic
+	Search page must support real-time front-end filtering by Date and Category without re-scraping.
+	________________
+
+
+Event Categories & Source Integration
+To ensure users find things across all spectrums, VibeCheck aggregates events into these 10 groups:
+1. Nightlife & Parties: R&B, Reggae, Hip Hop, and Salsa parties.
+2. Family & Kids: Park events, playgrounds, and kid-friendly festivals.
+3. Food & Drink: Brunch, food truck rallies, and pop-up dining.
+4. Live Music & Concerts: Jazz sets, local bands, and ticketed performances.
+5. Arts & Culture: Gallery openings, theater, and spoken word.
+6. Health & Wellness: Outdoor yoga, boot camps, and wellness meetups.
+7. Community & Festivals: Street fairs, block parties, and urban culture.
+8. Workshops & Classes: Sip and paint, cooking classes, and DIY workshops.
+9. Professional & Networking: Tech mixers and business seminars.
+10. Sports & Recreation: 5K runs, pick-up games, and sports screenings.
+Target Sources: Eventbrite, Posh, Ticketmaster, Luma, Meetup, and local community calendars.
+________________
+
+
+UI Components
+* Search Results Page: Includes a "Filter Bar" for toggling categories and specific dates within the 7-day range.
+* Event Detail Page:
+   * Name & Description: Detailed breakdown of the event.
+   * Weather Widget: Specific NWS forecast for that event's date (requires city to lat/long conversion).
+   * "Get Here" Button: Opens Google Maps with the event address as the destination.
+   * Original Link: Clear CTA to view the event and purchase tickets on the source site (e.g., Posh).
+Success Metrics
+* Filter Engagement: Percentage of users who utilize the day/category filters on the search page.
+* Detail Depth: Average time spent on the Event Detail page.
+* Navigation Rate: Number of users clicking the "Get Here" button per session.
