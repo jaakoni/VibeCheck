@@ -2,7 +2,7 @@
 
 
 
-Conversion time: 2.214 seconds.
+Conversion time: 4.109 seconds.
 
 
 Using this Markdown file:
@@ -15,7 +15,7 @@ Using this Markdown file:
 Conversion notes:
 
 * Docs™ to Markdown version 2.0β2
-* Wed Apr 01 2026 21:51:16 GMT-0700 (Pacific Daylight Time)
+* Fri Apr 03 2026 19:04:44 GMT-0700 (Pacific Daylight Time)
 * Source doc: Event Planner PRD
 * Tables are currently converted to HTML tables.
 ----->
@@ -75,7 +75,15 @@ Users will experience a 3-step flow to discover and plan their outings:
    </td>
    <td><strong>Search Results</strong>
    </td>
-   <td>User views a master list of all events. They can <strong>Filter</strong> by specific <strong>Day</strong> or any of the <strong>10 Categories</strong>.
+   <td>User views a master list of all events. 
+<p>
+They can <strong>Filter</strong> by 
+<ul>
+
+<li>specific <strong>Day</strong> or any of the <strong>10 Categories</strong>.</li>
+
+<li>Event source (EventBrite, Ticketmaster, Posh.vip, Luma, etc.</li>
+</ul>
    </td>
    <td>Yes
    </td>
@@ -136,6 +144,14 @@ Luma and Posh.vip will need a webscraper and this will be done post MVP. as a fa
    <td>Spectrum Tagging
    </td>
    <td>Logic must categorize every event into one of the 10 defined categories (Nightlife, Family, etc.) based on metadata.
+   </td>
+  </tr>
+  <tr>
+   <td>
+   </td>
+   <td>Source Tagging
+   </td>
+   <td>The app must tag each event with it’s source (i.e. EventBrite, Ticketmaster, Meetup, Luma, Posh.vip, etc.)
    </td>
   </tr>
   <tr>
@@ -214,10 +230,11 @@ To ensure users find things across all spectrums, **VibeCheck** aggregates event
 
 * **Search Results Page:** Includes a "Filter Bar" for toggling categories and specific dates within the 7-day range.
 * **Event Detail Page:**
-    * **Name & Description:** Detailed breakdown of the event.
-    * **Weather Widget:** Specific NWS forecast for that event's date (requires city to lat/long conversion).
-    * **"Get Here" Button:** Opens Google Maps with the event address as the destination.
-    * **Original Link:** Clear CTA to view the event and purchase tickets on the source site (e.g., Posh).
+  * **Name & Description:** Detailed breakdown of the event.
+  * PIctures ingested from the API or webcrawler
+  * **Weather Widget:** Specific NWS forecast for that event's date (requires city to lat/long conversion).
+  * **"Get Here" Button:** Opens Google Maps with the event address as the destination.
+  * **Original Link:** Clear CTA to view the event and purchase tickets on the source site (e.g., Posh).
 
 
 ## **Success Metrics**
