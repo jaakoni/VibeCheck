@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.services)
     alias(libs.plugins.secrets.gradle.plugin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -54,6 +55,13 @@ dependencies {
 
     // Google Places SDK
     implementation(libs.places)
+
+    // Networking
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.kotlinx.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.kotlinx.serialization.json)
 
     // Firebase
     implementation(platform(libs.firebase.bom))

@@ -17,18 +17,20 @@
     *   *Completed:* Implemented Material 3 Date Range Picker.
     *   *Completed:* Implemented Multi-Select Category Bottom Sheet Modal.
 
-## Phase 3: Networking, Real Data Ingestion & Scraper/Fast-Follow Placeholders
-*   **Step 3.1 (Networking Setup):** *Pending:* Add Retrofit, OkHttp, and Kotlin Serialization dependencies.
-*   **Step 3.2 (API Connections):** *Pending:* Create the API client interfaces for Ticketmaster and Eventbrite only.
-*   **Step 3.3 (Data Mapping):** *Pending:* Write Repository logic that maps the vastly different API JSON responses from Ticketmaster/Eventbrite into our single, unified `Event` data model.
-*   **Step 3.4 (Ingestion Test):** *Pending:* Verify API connections by executing a hardcoded search and logging the normalized `Event` objects.
-*   **Step 3.5 (The Mock Repository & Placeholders):** *Pending:* Create a `MockEventRepository`. Crucially, we will hardcode realistic placeholder events representing Eventbrite and Ticketmaster into this mock data. This ensures our UI and category filters work perfectly for these specific vibes, even without live ingestion.
-*   **Step 3.6 (Firebase Scraper Listener):** *Pending:* Create a `FirebaseEventRepository` connecting to the Firestore `events` collection. We will create a Developer Tool Button in the app to push the fake Eventbrite/Ticketmaster mock data directly to the Firebase Console to prove the app can successfully ingest scraped/fast-follow data.
+## Phase 3: Networking, Real Data Ingestion & Dual-Source Integration
+*   **Step 3.1 (Networking Setup):** *Completed:* Add Retrofit, OkHttp, and Kotlin Serialization dependencies.
+*   **Step 3.2 (Manual API Test):** *Completed:* Verify Ticketmaster and Eventbrite API keys using cURL or Browser to inspect raw JSON responses (Confirmed Eventbrite Private Token via `/users/me/`).
+*   **Step 3.3 (API Connections):** *Pending:* Create the API client interfaces for **Ticketmaster (Discovery API)** and **Eventbrite (Organization Events API)**. For Eventbrite, we will use a curated list of Organization IDs for 12 focus cities.
+    *   **Focus Cities:** Atlanta, NYC, LA, Austin, Miami, Chicago, San Francisco, Washington D.C., Houston, Dallas, Phoenix, Seattle.
+*   **Step 3.4 (Data Mapping):** *Pending:* Write Repository logic that maps the vastly different API JSON responses from Ticketmaster/Eventbrite into our single, unified `Event` data model.
+*   **Step 3.5 (Ingestion Test):** *Pending:* Verify API connections by executing a hardcoded search and logging the normalized `Event` objects.
+*   **Step 3.6 (The Mock Repository & Placeholders):** *Pending:* Create a `MockEventRepository`. Crucially, we will hardcode realistic placeholder events representing Eventbrite and Ticketmaster into this mock data. This ensures our UI and category filters work perfectly for these specific vibes, even without live ingestion.
+*   **Step 3.7 (Firebase & Developer Tools):** *Pending:* Create a `FirebaseEventRepository`. We will create a Developer Tool Button in the app to push fake Eventbrite/Ticketmaster mock data AND the curated list of 120 Organization IDs (10 per focus city) directly to Firebase.
 
 ## Phase 4: Search Results & Data Binding
 *   **Step 4.1:** *Pending:* Create the **Search Results** page UI to display a list/grid of events.
-*   **Step 4.2:** *Pending:* Connect the Search Home page inputs to query the **Mock Repository** (Step 3.5). Use this safe environment to perfect the UI and the 10-category filtering logic (ensuring our mock filters correctly).
-*   **Step 4.3 (The "Live Swap"):** *Pending:* Swap the Mock Repository for a combined Repository. The app will now pull live data from the APIs (Ticketmaster/Eventbrite) AND read from Firebase (where the scraped data and fast-follow data will eventually live).
+*   **Step 4.2:** *Pending:* Connect the Search Home page inputs to query the **Mock Repository** (Step 3.6). Use this safe environment to perfect the UI and the 10-category filtering logic (ensuring our mock filters correctly).
+*   **Step 4.3 (The "Live Swap"):** *Pending:* Swap the Mock Repository for a combined Repository. The app will now pull live data from the APIs (Ticketmaster/Eventbrite) AND read from Firebase (where the curated organizer data and future scraped data will live).
 
 ## Phase 5: Event Details & Location
 *   **Step 5.1:** *Pending:* Create the **Individual Event** page UI to show deep details (description, time, tickets, original source link) using the data object passed from the Search Results.
