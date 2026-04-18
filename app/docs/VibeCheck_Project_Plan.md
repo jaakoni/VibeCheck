@@ -46,3 +46,16 @@
 ## Phase 7: Launch Preparation
 *   **Step 7.1:** *Pending:* Load the app onto a physical Android device to test real-world performance.
 *   **Step 7.2:** *Pending:* Prepare for the Google Play Store (App Bundle, icons, store listing).
+
+## Phase 8: Multi-Platform Expansion (Firebase Web & iOS Setup)
+*   **Step 8.1: Web App Implementation (Claude/Cursor/Vercel):**
+    *   Register **Web App** in Firebase Console; initialize SDK using `firebaseConfig`.
+    *   Initialize project in **Cursor**; use **Claude** to generate React/Next.js components.
+    *   Deploy repository to **Vercel** via GitHub integration for continuous deployment.
+    *   Configure Vercel Environment Variables to securely store `firebaseConfig` keys.
+*   **Step 8.2: iOS App Implementation (Xcode):**
+    *   Register **iOS App** in Firebase Console; download `GoogleService-Info.plist`.
+    *   Integrate Firebase SDK via Swift Package Manager.
+*   **Step 8.3: Cross-Platform Synchronization:**
+    *   Ensure all platforms point to the same Project ID.
+    *   Configure shared Firestore Security Rules for consistent data access across all platforms.
