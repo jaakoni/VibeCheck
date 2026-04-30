@@ -59,6 +59,7 @@ dependencies {
     // Networking
     implementation(libs.retrofit)
     implementation(libs.retrofit.kotlinx.serialization)
+    implementation("com.squareup.retrofit2:converter-scalars:2.11.0") // Needed for raw string logs
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
