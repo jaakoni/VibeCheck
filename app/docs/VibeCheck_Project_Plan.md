@@ -17,21 +17,18 @@
     *   *Completed:* Implemented Material 3 Date Range Picker.
     *   *Completed:* Implemented Multi-Select Category Bottom Sheet Modal.
 
-## Phase 3: Networking, Real Data Ingestion & Dual-Source Integration
+## Phase 3: Networking, Real Data Ingestion & Ticketmaster Integration
 *   **Step 3.1 (Networking Setup):** *Completed:* Add Retrofit, OkHttp, and Kotlin Serialization dependencies.
-*   **Step 3.2 (Manual API Test):** *Completed:* Verify Ticketmaster and Eventbrite API keys using cURL or Browser to inspect raw JSON responses (Confirmed Eventbrite Private Token via `/users/me/`).
-*   **Step 3.3 (API Connection Test):** *Pending:* Implement a dedicated diagnostic function within the app (using the logging interceptor) to verify live connectivity and authentication with Ticketmaster and Eventbrite APIs in the emulator/device logs.
-*   **Step 3.4 (API Client Implementation):** *Pending:* Create the API client interfaces for **Ticketmaster (Discovery API)** and **Eventbrite (Organization Events API)**. For Eventbrite, we will use a curated list of Organization IDs for 12 focus cities.
-    *   **Focus Cities:** Atlanta, NYC, LA, Austin, Miami, Chicago, San Francisco, Washington D.C., Houston, Dallas, Phoenix, Seattle.
-*   **Step 3.5 (Data Mapping):** *Pending:* Write Repository logic that maps the vastly different API JSON responses from Ticketmaster/Eventbrite into our single, unified `Event` data model.
+*   **Step 3.2 (Manual API Test):** *Completed:* Verify Ticketmaster and Eventbrite API keys using cURL or Browser.
+*   **Step 3.3 (Diagnostic Connection Test):** *Completed:* Implemented diagnostic function within `MainActivity` to verify Ticketmaster Discovery API connectivity and Eventbrite authentication.
+*   **Step 3.4 (Ticketmaster API Integration):** *Pending:* Build the `TicketmasterApiService` and `Repository` logic to fetch live events for cities.
+*   **Step 3.5 (Data Mapping):** *Pending:* Write Repository logic that maps the API JSON responses from Ticketmaster into our unified `Event` data model.
 *   **Step 3.6 (Ingestion Test):** *Pending:* Verify API connections by executing a hardcoded search and logging the normalized `Event` objects.
-*   **Step 3.7 (The Mock Repository & Placeholders):** *Pending:* Create a `MockEventRepository`. Crucially, we will hardcode realistic placeholder events representing Eventbrite and Ticketmaster into this mock data. This ensures our UI and category filters work perfectly for these specific vibes, even without live ingestion.
-*   **Step 3.8 (Firebase & Developer Tools):** *Pending:* Create a `FirebaseEventRepository`. We will create a Developer Tool Button in the app to push fake Eventbrite/Ticketmaster mock data AND the curated list of 120 Organization IDs (10 per focus city) directly to Firebase.
 
 ## Phase 4: Search Results & Data Binding
 *   **Step 4.1:** *Pending:* Create the **Search Results** page UI to display a list/grid of events.
-*   **Step 4.2:** *Pending:* Connect the Search Home page inputs to query the **Mock Repository** (Step 3.7). Use this safe environment to perfect the UI and the 10-category filtering logic (ensuring our mock filters correctly).
-*   **Step 4.3 (The "Live Swap"):** *Pending:* Swap the Mock Repository for a combined Repository. The app will now pull live data from the APIs (Ticketmaster/Eventbrite) AND read from Firebase (where the curated organizer data and future scraped data will live).
+*   **Step 4.2:** *Pending:* Connect the Search Home page inputs to query the Ticketmaster Repository (Step 3.5). Perfect the 10-category filtering logic.
+*   **Step 4.3 (Live Sync):** *Pending:* Verify live data from Ticketmaster APIs correctly populate the UI.
 
 ## Phase 5: Event Details & Location
 *   **Step 5.1:** *Pending:* Create the **Individual Event** page UI to show deep details (description, time, tickets, original source link) using the data object passed from the Search Results.
@@ -48,15 +45,20 @@
 *   **Step 7.1:** *Pending:* Load the app onto a physical Android device to test real-world performance.
 *   **Step 7.2:** *Pending:* Prepare for the Google Play Store (App Bundle, icons, store listing).
 
-## Phase 8: Multi-Platform Expansion (Firebase Web & iOS Setup)
-*   **Step 8.1: Web App Implementation (Claude/Cursor/Vercel):**
+## Phase 8: Scraper Integration (Eventbrite, Luma, Posh)
+*   **Step 8.1:** Develop Python scraper scripts for Eventbrite, Luma, and Posh to extract real Organization IDs/event lists and push them to Firebase.
+*   **Step 8.2:** Create a `FirebaseEventRepository`. Implement a Developer Tool Button in the app to push scraped data directly to Firebase.
+*   **Step 8.3:** Integrate scraper data (from Firebase) into the combined Repository to supplement Ticketmaster events.
+
+## Phase 9: Multi-Platform Expansion (Firebase Web & iOS Setup)
+*   **Step 9.1: Web App Implementation (Claude/Cursor/Vercel):**
     *   Register **Web App** in Firebase Console; initialize SDK using `firebaseConfig`.
     *   Initialize project in **Cursor**; use **Claude** to generate React/Next.js components.
     *   Deploy repository to **Vercel** via GitHub integration for continuous deployment.
     *   Configure Vercel Environment Variables to securely store `firebaseConfig` keys.
-*   **Step 8.2: iOS App Implementation (Xcode):**
+*   **Step 9.2: iOS App Implementation (Xcode):**
     *   Register **iOS App** in Firebase Console; download `GoogleService-Info.plist`.
     *   Integrate Firebase SDK via Swift Package Manager.
-*   **Step 8.3: Cross-Platform Synchronization:**
+*   **Step 9.3: Cross-Platform Synchronization:**
     *   Ensure all platforms point to the same Project ID.
     *   Configure shared Firestore Security Rules for consistent data access across all platforms.

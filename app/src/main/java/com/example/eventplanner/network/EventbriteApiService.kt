@@ -1,15 +1,19 @@
 package com.example.eventplanner.network
 
+import kotlinx.serialization.Serializable
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Path
+
+@Serializable
+data class EventbriteUser(
+    val id: String,
+    val name: String
+)
 
 interface EventbriteApiService {
-    // Eventbrite Organization API: Pull events for specific org ID
-    // Example: /v3/organizations/{org_id}/events/
-    @GET("v3/organizations/{org_id}/events/")
-    suspend fun getOrganizationEvents(
-        @Header("Authorization") bearerToken: String,
-        @Path("org_id") organizationId: String
-    ): String // Returning String temporarily to inspect raw JSON in logs
+    // Authentication Heartbeat: Only use this to verify the token
+    @GET("v3/users/me/")
+    suspend fun getMyUserDetails(
+        @Header("Authorization") bearerToken: String
+    ): EventbriteUser
 }
