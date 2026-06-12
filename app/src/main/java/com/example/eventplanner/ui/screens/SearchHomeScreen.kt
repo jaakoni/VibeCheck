@@ -31,7 +31,8 @@ import com.example.eventplanner.viewmodel.SearchHomeViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchHomeScreen(
-    viewModel: SearchHomeViewModel = viewModel()
+    viewModel: SearchHomeViewModel = viewModel(),
+    onSearchClicked: (city: String) -> Unit
 ) {
     val searchCriteria by viewModel.searchCriteria.collectAsState()
     val cityPredictions by viewModel.cityPredictions.collectAsState()
@@ -168,7 +169,12 @@ fun SearchHomeScreen(
 
                     // Main Search Action
                     Button(
-                        onClick = { viewModel.onSearchClicked() },
+                        onClick = { 
+                            viewModel.onSearchClicked()
+                            // Pass the actual selected city to the navigation action (fallback to Atlanta if empty)
+                            val selectedCity = searchCriteria.city.ifEmpty { "Atlanta" }
+                            onSearchClicked(selectedCity)
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(56.dp),
@@ -192,9 +198,7 @@ fun SearchHomeScreen(
             Spacer(modifier = Modifier.height(16.dp))
             
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                // Concert Placeholder Card
                 TrendingCard(title = "Live Concert", category = "Music", modifier = Modifier.weight(1f))
-                // Yoga Placeholder Card
                 TrendingCard(title = "Morning Yoga", category = "Health", modifier = Modifier.weight(1f))
             }
         }
@@ -342,7 +346,6 @@ fun SearchHomeTopBar() {
     TopAppBar(
         title = { Text("VibeCheck", fontWeight = FontWeight.Bold) },
         actions = {
-            // User Profile Mockup
             Box(
                 modifier = Modifier
                     .padding(end = 16.dp)
