@@ -10,7 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
@@ -26,8 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import java.util.Locale
 import com.example.eventplanner.model.Event
 import com.example.eventplanner.model.EventCategory
+import com.example.eventplanner.model.EventSource
 import com.example.eventplanner.viewmodel.SearchResultsUiState
 import com.example.eventplanner.viewmodel.SearchResultsViewModel
 
@@ -37,7 +39,7 @@ fun SearchResultsScreen(
     city: String,
     onBackClick: () -> Unit,
     onEventClick: (Event) -> Unit,
-    viewModel: SearchResultsViewModel = viewModel()
+    viewModel: SearchResultsViewModel = viewModel(),
 ) {
     var selectedDayFilter by remember { mutableStateOf("Today") }
     var selectedCategoryFilter by remember { mutableStateOf<EventCategory?>(null) }
@@ -56,7 +58,7 @@ fun SearchResultsScreen(
                 title = { Text("VibeCheck", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
@@ -184,14 +186,39 @@ fun SearchResultsScreen(
                     }
                 }
                 is SearchResultsUiState.Success -> {
-                    LazyColumn(
-                        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(24.dp),
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        items(state.events) { event ->
-                            EventCard(event = event) {
-                                onEventClick(event)
+                    val filteredEvents = state.events.filter { event ->
+                        val matchesCategory = selectedCategoryFilter == null || event.category == selectedCategoryFilter
+                        val matchesSource = when (selectedSourceFilter) {
+                            "All Sources" -> true
+                            "Eventbrite" -> event.source == EventSource.EVENTBRITE
+                            "Ticketmaster" -> event.source == EventSource.TICKETMASTER
+                            "Luma" -> event.source == EventSource.LUMA
+                            else -> true
+                        }
+                        matchesCategory && matchesSource
+                    }
+
+                    if (filteredEvents.isEmpty()) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No events match your current filter selections.",
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.padding(24.dp)
+                            )
+                        }
+                    } else {
+                        LazyColumn(
+                            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(24.dp),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            items(filteredEvents) { event ->
+                                EventCard(event = event) {
+                                    onEventClick(event)
+                                }
                             }
                         }
                     }
@@ -340,7 +367,7 @@ fun EventCard(event: Event, onClick: () -> Unit) {
 
                     // Price Tag
                     Text(
-                        text = if (event.cost == null || event.cost == 0.0) "Free" else "$${String.format("%.2f", event.cost)}",
+                        text = if ((event.cost == null || event.cost == 0.0)) "Free" else "$${String.format(Locale.getDefault(), "%.2f", event.cost)}",
                         color = Color(0xFF3D618C),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium

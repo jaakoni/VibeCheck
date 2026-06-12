@@ -24,9 +24,9 @@
 *   **Step 3.6 (Ingestion Test):** *Completed:* Verified API connection and mapping by executing a hardcoded search and logging the normalized `Event` objects in Logcat.
 
 ## Phase 4: Search Results & Data Binding
-*   **Step 4.1:** *Pending:* Create the **Search Results** page UI to display a list/grid of events.
-*   **Step 4.2:** *Pending:* Connect the Search Home page inputs to query the Ticketmaster Repository (Step 3.4). Perfect the category filtering logic.
-*   **Step 4.3 (Live Sync):** *Pending:* Verify live data from Ticketmaster APIs correctly populate the UI.
+*   **Step 4.1:** *Completed:* Create the **Search Results** page UI to display a list of events. (Implemented cards, category tags, price badges, and source badges).
+*   **Step 4.2:** *Completed:* Connect the Search Home page inputs to query the Ticketmaster Repository. Implemented reactive category and source filtering logic.
+*   **Step 4.3 (Live Sync):** *Completed:* Verified live data from Ticketmaster APIs correctly populate the UI and respond to filter changes.
 
 ## Phase 5: Event Details & Location
 *   **Step 5.1:** *Pending:* Create the **Individual Event** page UI to show deep details.
