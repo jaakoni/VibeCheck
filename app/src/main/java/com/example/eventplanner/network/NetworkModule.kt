@@ -22,6 +22,17 @@ object NetworkModule {
         .addInterceptor(logging)
         .build()
 
+    // NWS requires a custom User-Agent header to avoid 403 Forbidden errors
+    private val weatherClient = OkHttpClient.Builder()
+        .addInterceptor(logging)
+        .addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                .header("User-Agent", "VibeCheckApp/1.0 (contact@vibecheckapp.example.com)")
+                .build()
+            chain.proceed(request)
+        }
+        .build()
+
     private val contentType = "application/json".toMediaType()
 
     // Ticketmaster Retrofit
@@ -38,6 +49,14 @@ object NetworkModule {
         .addConverterFactory(json.asConverterFactory(contentType))
         .build()
 
+    // National Weather Service (NWS) Retrofit
+    val weatherRetrofit: Retrofit = Retrofit.Builder()
+        .baseUrl("https://api.weather.gov/")
+        .client(weatherClient)
+        .addConverterFactory(json.asConverterFactory(contentType))
+        .build()
+
     val ticketmasterApi: TicketmasterApiService = ticketmasterRetrofit.create(TicketmasterApiService::class.java)
     val eventbriteApi: EventbriteApiService = eventbriteRetrofit.create(EventbriteApiService::class.java)
+    val weatherApi: WeatherApiService = weatherRetrofit.create(WeatherApiService::class.java)
 }

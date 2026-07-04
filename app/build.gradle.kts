@@ -55,6 +55,8 @@ dependencies {
 
     // Google Places SDK
     implementation(libs.places)
+    implementation(libs.play.services.maps)
+    implementation(libs.maps.compose)
 
     // Networking
     implementation(libs.retrofit)

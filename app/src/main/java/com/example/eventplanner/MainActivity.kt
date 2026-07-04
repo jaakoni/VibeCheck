@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.eventplanner.ui.screens.EventDetailScreen
 import com.example.eventplanner.ui.screens.SearchHomeScreen
 import com.example.eventplanner.ui.screens.SearchResultsScreen
 import com.example.eventplanner.ui.theme.EventPlannerTheme
@@ -61,7 +62,21 @@ class MainActivity : ComponentActivity() {
                                     navController.popBackStack()
                                 },
                                 onEventClick = { event ->
-                                    // Phase 5.1: Navigate to Event Details
+                                    navController.navigate("event_detail/${event.id}")
+                                }
+                            )
+                        }
+
+                        // Event details page route
+                        composable(
+                            route = "event_detail/{eventId}",
+                            arguments = listOf(navArgument("eventId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val eventId = backStackEntry.arguments?.getString("eventId") ?: ""
+                            EventDetailScreen(
+                                eventId = eventId,
+                                onBackClick = {
+                                    navController.popBackStack()
                                 }
                             )
                         }

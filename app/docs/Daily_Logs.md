@@ -20,3 +20,15 @@
 ### Technical Notes
 - Current data source is the Ticketmaster API.
 - Eventbrite/Luma filters are active but show empty results until Phase 8 (Scrapers/Firebase) is implemented.
+
+## 2026-07-04
+### Completed Tasks
+- **Bug Fixes & Troubleshooting**
+    - Diagnosed and documented a known internal Android Studio Gemini visual rendering bug to avoid future session crashes.
+    - Fixed a critical crash on the Event Details screen caused by a missing Google Maps API key in `AndroidManifest.xml`. Properly injected the `<meta-data android:name="com.google.android.geo.API_KEY" ... />` tag.
+- **Verification & Testing**
+    - Verified Phase 5 features in the codebase: Event Details UI, NWS Weather Integration, and Google Maps integration.
+    - Created a manual step-by-step verification checklist for checking UI components natively on the emulator/device.
+- **Project Management**
+    - Updated `VibeCheck_Project_Plan.md` to officially mark Phase 5 (Event Details & Location) as *Completed*.
+    - Assessed readiness to begin Phase 6 (Quality Assurance) in the next session.

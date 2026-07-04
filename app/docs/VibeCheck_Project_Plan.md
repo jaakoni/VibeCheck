@@ -29,9 +29,9 @@
 *   **Step 4.3 (Live Sync):** *Completed:* Verified live data from Ticketmaster APIs correctly populate the UI and respond to filter changes.
 
 ## Phase 5: Event Details & Location
-*   **Step 5.1:** *Pending:* Create the **Individual Event** page UI to show deep details.
-*   **Step 5.2:** *Pending:* Integrate the Google Maps API.
-*   **Step 5.3:** *Pending:* Integrate the NWS API for weather.
+*   **Step 5.1:** *Completed:* Create the **Individual Event** page UI to show deep details.
+*   **Step 5.2:** *Completed:* Integrate the Google Maps API.
+*   **Step 5.3:** *Completed:* Integrate the NWS API for weather.
 
 ## Phase 6: Quality Assurance
 *   **Step 6.1:** *Pending:* Execute test plan.
