@@ -32,3 +32,5 @@
 - **Project Management**
     - Updated `VibeCheck_Project_Plan.md` to officially mark Phase 5 (Event Details & Location) as *Completed*.
     - Assessed readiness to begin Phase 6 (Quality Assurance) in the next session.
+- **Code Analysis (Lint)**
+    - Reviewed minor lint warnings (unused default colors, library version updates available, `String.toUri()` KTX suggestion, and one hardcoded Retrofit dependency missing from TOML). Decided to ignore for now and clean up in a future tech-debt phase.
