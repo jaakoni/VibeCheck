@@ -34,3 +34,11 @@
     - Assessed readiness to begin Phase 6 (Quality Assurance) in the next session.
 - **Code Analysis (Lint)**
     - Reviewed minor lint warnings (unused default colors, library version updates available, `String.toUri()` KTX suggestion, and one hardcoded Retrofit dependency missing from TOML). Decided to ignore for now and clean up in a future tech-debt phase.
+
+- **Phase 6: Quality Assurance (Step 6.1 & 6.2 Completed)**
+    - Wrote Unit Tests for `TicketmasterRepository` to verify API JSON mapping logic.
+    - Wrote Unit Tests for `SearchResultsViewModel` to verify that active filters accurately sort events behind the scenes.
+    - Wrote Compose UI Tests for `SearchResultsScreenTest` to verify interactive pills update the screen list.
+    - Wrote Compose UI Tests for `EventDetailScreenTest` to inject a mock event and assert correct data (Title, Time, Venue) displays perfectly on screen.
+    - *Known Bug / Workaround for Step 6.2 (Execution):* Attempting to run Espresso UI Tests on Android 35 emulators results in an internal `InputManager` crash. Workaround: Created and ran UI tests on an API 33 (Tiramisu) or API 34 (UpsideDownCake) emulator using the Android Studio Device Manager.
+    - *Execution Success:* All automated unit and UI tests executed on an API 33 emulator successfully passed with 100% green checks. Phase 6 is officially completed.

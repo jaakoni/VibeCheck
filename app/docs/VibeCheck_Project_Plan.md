@@ -34,11 +34,18 @@
 *   **Step 5.3:** *Completed:* Integrate the NWS API for weather.
 
 ## Phase 6: Quality Assurance
-*   **Step 6.1:** *Pending:* Execute test plan.
+*   **Step 6.1:** *Completed:* Create test plan & write automated unit and UI tests.
+*   **Step 6.2:** *Completed:* Run and execute the test plan on a stable API 33/34 emulator to verify green passes.
 
 ## Phase 7: Launch Preparation
 *   **Step 7.1:** *Pending:* Load app on physical device.
+    *   Enable Developer Options & USB Debugging on a real Android phone.
+    *   Connect phone to computer and deploy directly from Android Studio.
+    *   Verify hardware GPS coordinates, touch latency, and UI scale in-hand.
 *   **Step 7.2:** *Pending:* Prepare for Google Play Store.
+    *   Generate a secure, release-signed Keystore and build the production Android App Bundle (AAB).
+    *   Configure and write Play Store marketing assets (App Icon, short/long description, 16:9 vertical screenshots, feature graphic).
+    *   Set up Google Play Console Developer Account ($25 fee) and register prerequisites.
 
 ## Phase 8: Scraper Integration (Eventbrite, Luma, Posh)
 *   **Step 8.1:** Develop Python scraper scripts.

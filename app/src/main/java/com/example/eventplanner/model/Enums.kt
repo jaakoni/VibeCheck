@@ -5,7 +5,7 @@ enum class EventCategory(val displayName: String) {
     NIGHTLIFE("Nightlife & Parties"),
     FAMILY("Family & Kids"),
     FOOD_DRINK("Food & Drink"),
-    LIVE_MUSIC("Live Music & Concerts"),
+    LIVE_MUSIC("Live Music"),
     ARTS_CULTURE("Arts & Culture"),
     HEALTH_WELLNESS("Health & Wellness"),
     COMMUNITY_FESTIVALS("Community & Festivals"),
