@@ -52,7 +52,8 @@
 - **Phase 7: Launch Preparation (Step 7.1 Started)**
     - Configured a physical Google Pixel device for development (unlocked Developer Options and enabled USB Debugging).
     - Successfully compiled, built, and deployed the VibeCheck APK directly from Android Studio onto the physical Pixel device.
+    - **Homepage Scroll Fix:** Resolved the homepage freeze by adding `Modifier.verticalScroll(rememberScrollState())` to the root `Column` of `SearchHomeScreen.kt` to allow vertical swiping.
+    - **Date Filtering Bug Fix:** Fixed a critical bug where search results ignored selected dates and displayed future events in September instead of July. Passed start/end date millisecond timestamps via Navigation arguments in `MainActivity.kt` and applied local filtering on `SearchResultsScreen.kt`.
 
 ### Discovered Issues / Active Debugging
-- **Homepage Scroll Freeze:** On the physical Google Pixel, the homepage (`SearchHomeScreen.kt`) root layout is a fixed `Column` which does not support vertical scrolling by default. If the layout exceeds the physical screen boundaries or is compressed by the keyboard, it gets cut off and is unresponsive to scroll gestures.
-- **Proposed Fix:** Add `Modifier.verticalScroll(rememberScrollState())` to the root `Column` of `SearchHomeScreen.kt` to allow natural vertical swiping/scrolling. (Pending user approval on next session).
+- *Pending Verification (Step 7.1 - Physical Verification):* Both the scroll fix and the date filtering fix have been successfully compiled and built. Verification of these fixes on the physical Google Pixel device is queued for tomorrow.

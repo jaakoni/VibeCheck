@@ -37,10 +37,10 @@
       </SelectionState>
       <SelectionState runConfigName="Tests in 'com.example.eventplanner.ui'">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-07-10T22:28:15.509355Z">
+        <DropdownSelection timestamp="2026-07-13T20:17:24.863932Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/beast/.android/avd/Pixel_8_Pro.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=49280DLAQ004K9" />
             </handle>
           </Target>
         </DropdownSelection>

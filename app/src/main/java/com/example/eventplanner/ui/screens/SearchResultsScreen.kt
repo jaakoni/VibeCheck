@@ -37,6 +37,8 @@ import com.example.eventplanner.viewmodel.SearchResultsViewModel
 @Composable
 fun SearchResultsScreen(
     city: String,
+    startDate: Long? = null,
+    endDate: Long? = null,
     onBackClick: () -> Unit,
     onEventClick: (Event) -> Unit,
     viewModel: SearchResultsViewModel = viewModel(),
@@ -195,7 +197,13 @@ fun SearchResultsScreen(
                             "Luma" -> event.source == EventSource.LUMA
                             else -> true
                         }
-                        matchesCategory && matchesSource
+                        val matchesDate = if (startDate != null && endDate != null) {
+                            // Ensure the event start falls within the selected range (adding 24 hours in millis to the end date to include the full final day)
+                            event.startTimestamp >= startDate && event.startTimestamp <= (endDate + 86400000L)
+                        } else {
+                            true
+                        }
+                        matchesCategory && matchesSource && matchesDate
                     }
 
                     if (filteredEvents.isEmpty()) {

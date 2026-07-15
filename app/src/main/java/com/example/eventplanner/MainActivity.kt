@@ -42,22 +42,32 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("search_home") {
                             SearchHomeScreen(
-                                onSearchClicked = { city ->
+                                onSearchClicked = { city, start, end ->
                                     // URL encode the city string to securely support spaces (e.g. "New York" -> "New%20York")
                                     val encodedCity = URLEncoder.encode(city, StandardCharsets.UTF_8.toString())
-                                    navController.navigate("search_results/$encodedCity")
+                                    val route = "search_results/$encodedCity" +
+                                        if (start != null && end != null) "?start=$start&end=$end" else ""
+                                    navController.navigate(route)
                                 }
                             )
                         }
                         
-                        // Transition path expects city argument
+                        // Transition path expects city argument and optional start/end date filters
                         composable(
-                            route = "search_results/{city}",
-                            arguments = listOf(navArgument("city") { type = NavType.StringType })
+                            route = "search_results/{city}?start={start}&end={end}",
+                            arguments = listOf(
+                                navArgument("city") { type = NavType.StringType },
+                                navArgument("start") { type = NavType.LongType; defaultValue = -1L },
+                                navArgument("end") { type = NavType.LongType; defaultValue = -1L }
+                            )
                         ) { backStackEntry ->
                             val city = backStackEntry.arguments?.getString("city") ?: "Atlanta"
+                            val start = backStackEntry.arguments?.getLong("start") ?: -1L
+                            val end = backStackEntry.arguments?.getLong("end") ?: -1L
                             SearchResultsScreen(
                                 city = city,
+                                startDate = if (start != -1L) start else null,
+                                endDate = if (end != -1L) end else null,
                                 onBackClick = {
                                     navController.popBackStack()
                                 },

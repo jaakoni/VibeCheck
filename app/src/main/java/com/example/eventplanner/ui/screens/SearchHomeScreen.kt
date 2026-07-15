@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -32,7 +34,7 @@ import com.example.eventplanner.viewmodel.SearchHomeViewModel
 @Composable
 fun SearchHomeScreen(
     viewModel: SearchHomeViewModel = viewModel(),
-    onSearchClicked: (city: String) -> Unit
+    onSearchClicked: (city: String, start: Long?, end: Long?) -> Unit
 ) {
     val searchCriteria by viewModel.searchCriteria.collectAsState()
     val cityPredictions by viewModel.cityPredictions.collectAsState()
@@ -53,6 +55,7 @@ fun SearchHomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             
@@ -171,9 +174,9 @@ fun SearchHomeScreen(
                     Button(
                         onClick = { 
                             viewModel.onSearchClicked()
-                            // Pass the actual selected city to the navigation action (fallback to Atlanta if empty)
+                            // Pass the actual selected city, start date, and end date to the navigation action (fallback to Atlanta if empty)
                             val selectedCity = searchCriteria.city.ifEmpty { "Atlanta" }
-                            onSearchClicked(selectedCity)
+                            onSearchClicked(selectedCity, searchCriteria.startDateMillis, searchCriteria.endDateMillis)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
