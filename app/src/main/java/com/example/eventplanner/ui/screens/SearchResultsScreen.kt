@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import java.util.Locale
+import java.util.Date
+import java.text.SimpleDateFormat
 import com.example.eventplanner.model.Event
 import com.example.eventplanner.model.EventCategory
 import com.example.eventplanner.model.EventSource
@@ -43,15 +45,37 @@ fun SearchResultsScreen(
     onEventClick: (Event) -> Unit,
     viewModel: SearchResultsViewModel = viewModel(),
 ) {
-    var selectedDayFilter by remember { mutableStateOf("Today") }
+    var selectedDayFilter by remember { mutableStateOf("All Days") }
     var selectedCategoryFilter by remember { mutableStateOf<EventCategory?>(null) }
     var selectedSourceFilter by remember { mutableStateOf("All Sources") }
 
     val uiState by viewModel.eventsState.collectAsState()
 
+    // Generate dynamic day chips
+    val daysList = remember(startDate, endDate) {
+        val list = mutableListOf("All Days")
+        val formatter = SimpleDateFormat("EEE d", Locale.getDefault())
+        
+        if (startDate != null && endDate != null) {
+            var currentDate = startDate
+            while (currentDate <= endDate) {
+                list.add(formatter.format(Date(currentDate)))
+                currentDate += 86400000L // add 1 day in millis
+            }
+        } else {
+            // Generate for next 7 days starting today
+            var currentDate = System.currentTimeMillis()
+            for (i in 0 until 7) {
+                list.add(formatter.format(Date(currentDate)))
+                currentDate += 86400000L
+            }
+        }
+        list
+    }
+
     // Trigger search automatically when the screen loads
-    LaunchedEffect(city) {
-        viewModel.searchEvents(city)
+    LaunchedEffect(city, startDate, endDate) {
+        viewModel.searchEvents(city, startDate, endDate)
     }
 
     Scaffold(
@@ -103,8 +127,7 @@ fun SearchResultsScreen(
                     contentPadding = PaddingValues(horizontal = 24.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    val days = listOf("Today", "Mon 12", "Tue 13", "Wed 14", "Thu 15", "Fri 16")
-                    items(days) { day ->
+                    items(daysList) { day ->
                         val isSelected = selectedDayFilter == day
                         DayChip(day = day, isSelected = isSelected) {
                             selectedDayFilter = day
@@ -197,13 +220,22 @@ fun SearchResultsScreen(
                             "Luma" -> event.source == EventSource.LUMA
                             else -> true
                         }
+                        
+                        val formatter = SimpleDateFormat("EEE d", Locale.getDefault())
+                        val eventDayString = formatter.format(Date(event.startTimestamp))
+                        val matchesDayChip = if (selectedDayFilter == "All Days") {
+                            true
+                        } else {
+                            eventDayString == selectedDayFilter
+                        }
+
                         val matchesDate = if (startDate != null && endDate != null) {
                             // Ensure the event start falls within the selected range (adding 24 hours in millis to the end date to include the full final day)
                             event.startTimestamp >= startDate && event.startTimestamp <= (endDate + 86400000L)
                         } else {
                             true
                         }
-                        matchesCategory && matchesSource && matchesDate
+                        matchesCategory && matchesSource && matchesDate && matchesDayChip
                     }
 
                     if (filteredEvents.isEmpty()) {

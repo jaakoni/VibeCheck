@@ -57,7 +57,7 @@ class TicketmasterRepositoryTest {
             )
         )
 
-        coEvery { mockApiService.searchEvents(any(), any(), any()) } returns mockResponse
+        coEvery { mockApiService.searchEvents(any(), any(), any(), any(), any()) } returns mockResponse
 
         val events = repository.fetchEvents("Mock City")
 
@@ -82,7 +82,7 @@ class TicketmasterRepositoryTest {
 
         val mockResponse = TicketmasterResponse(_embedded = null) // No events
 
-        coEvery { mockApiService.searchEvents(any(), any(), any()) } returns mockResponse
+        coEvery { mockApiService.searchEvents(any(), any(), any(), any(), any()) } returns mockResponse
 
         val events = repository.fetchEvents("Empty City")
 

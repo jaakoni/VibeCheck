@@ -57,3 +57,25 @@
 
 ### Discovered Issues / Active Debugging
 - *Pending Verification (Step 7.1 - Physical Verification):* Both the scroll fix and the date filtering fix have been successfully compiled and built. Verification of these fixes on the physical Google Pixel device is queued for tomorrow.
+
+## 2026-07-15
+### Environment & Troubleshooting
+- **IDE Cache Issue (Project Relocation):** Discovered that moving the project folder to a new path on the local machine causes Android Studio to generate a new project hash in the `~/Library/Caches/Google/AndroidStudio.../projects/` directory. This results in the AI Assistant/Gemini "losing" the previous chat history and artifacts.
+- **Workaround/Fix:** Successfully restored the AI chat history and artifacts by copying the `.artifacts/` folder and merging the `cache-state.xml` records from the old project hash directory into the newly generated one. Documented this to quickly resolve any future folder moves.
+
+### Active Debugging
+- **Date Filtering Bug:** Investigated the root cause of the date filtering bug (which was still failing despite previous local filtering attempts). Identified four main issues:
+  1. The Ticketmaster API was being queried without date boundaries, meaning it fetched the top 20 general events which were then locally filtered out to zero.
+  2. Navigation logic omitted date arguments entirely when a single day was chosen.
+  3. The `parseTmDate` function was fragile and defaulting to `0L` when missing seconds in the format.
+  4. The horizontal day selector chips in the UI were completely hardcoded placeholders.
+- **Next Steps:** Created a comprehensive Implementation Plan to rewrite the API requests to pass `startDateTime` and `endDateTime`, fix date-time parsing, and create dynamic/clickable Day Chips on the results screen.
+
+### Completed Tasks
+- **Date Filtering Bugs Resolved:** Implemented the complete fixes for all date filtering issues.
+  1. Updated `TicketmasterApiService` and `TicketmasterRepository` to pass `startDateTime` and `endDateTime` filters.
+  2. Fixed `parseTmDate` to correctly handle UTC timestamps and edge cases.
+  3. Ensured proper navigation logic for single-day inputs in `MainActivity`.
+  4. Added dynamic "Day Chips" and wired up real-time on-device filtering inside `SearchResultsScreen.kt`.
+- **Testing:** Unit tests executed and passing successfully (`./gradlew test`). Walkthrough and implementation documentation has been logged in `Date_Filtering_Bug_Fix_Walkthrough.md`.
+- **Pending Verification:** Physical Android Device testing (Pixel 8) for the full end-to-end UI experience is queued for tomorrow morning.

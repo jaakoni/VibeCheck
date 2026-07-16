@@ -77,6 +77,8 @@ interface TicketmasterApiService {
     suspend fun searchEvents(
         @Query("apikey") apiKey: String,
         @Query("city") city: String,
+        @Query("startDateTime") startDateTime: String? = null,
+        @Query("endDateTime") endDateTime: String? = null,
         @Query("size") size: Int = 20
     ): TicketmasterResponse
 

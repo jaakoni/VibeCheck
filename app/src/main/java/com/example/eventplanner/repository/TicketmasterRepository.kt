@@ -12,9 +12,14 @@ import java.util.Locale
 
 class TicketmasterRepository(private val apiKey: String) {
 
-    suspend fun fetchEvents(city: String): List<Event> {
+    suspend fun fetchEvents(city: String, startDateTime: String? = null, endDateTime: String? = null): List<Event> {
         return try {
-            val response = NetworkModule.ticketmasterApi.searchEvents(apiKey, city)
+            val response = NetworkModule.ticketmasterApi.searchEvents(
+                apiKey = apiKey,
+                city = city,
+                startDateTime = startDateTime,
+                endDateTime = endDateTime
+            )
             val ticketmasterEvents = response._embedded?.events ?: emptyList()
             
             // Map the API result to our internal Event data model
@@ -79,9 +84,15 @@ class TicketmasterRepository(private val apiKey: String) {
     private fun parseTmDate(localDate: String?, localTime: String?): Long {
         if (localDate == null) return 0L
         val timeStr = localTime ?: "00:00:00"
+        
+        // Sometimes the time string has a Z at the end, or lacks seconds. We should handle variations.
+        val cleanedTimeStr = if (timeStr.contains("Z")) timeStr.replace("Z", "") else timeStr
+        val formattedTimeStr = if (cleanedTimeStr.length == 5) "$cleanedTimeStr:00" else cleanedTimeStr
+
         return try {
             val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-            val date = format.parse("$localDate $timeStr")
+            format.timeZone = java.util.TimeZone.getTimeZone("UTC")
+            val date = format.parse("$localDate $formattedTimeStr")
             date?.time ?: 0L
         } catch (e: Exception) {
             0L

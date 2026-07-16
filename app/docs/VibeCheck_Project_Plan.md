@@ -56,3 +56,8 @@
 *   **Step 9.1:** Web App Implementation (Claude/Cursor/Vercel).
 *   **Step 9.2:** iOS App Implementation (Xcode/Swift).
 *   **Step 9.3:** Cross-Platform Synchronization & Firestore Security Rules.
+
+
+## Other Notes
+* To build the iOS app, will use xCode and integrate Claude.  Will use Claude in Cursor to create a migration plan.  Claude will analyze the android files, and then come up with a plan to build the iOS app based on the android files.
+* To build the web scraper, will use Antigravity and the Google cloud/firebase integration (more seamless)

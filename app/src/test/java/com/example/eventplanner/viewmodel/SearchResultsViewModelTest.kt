@@ -55,7 +55,7 @@ class SearchResultsViewModelTest {
             )
         )
         
-        coEvery { mockRepository.fetchEvents("Atlanta") } returns mockEvents
+        coEvery { mockRepository.fetchEvents("Atlanta", any(), any()) } returns mockEvents
 
         viewModel.searchEvents("Atlanta, GA, USA") // Test city parsing
 
@@ -69,7 +69,7 @@ class SearchResultsViewModelTest {
 
     @Test
     fun `searchEvents with no results updates state to Empty`() = runTest {
-        coEvery { mockRepository.fetchEvents("Nowhere") } returns emptyList()
+        coEvery { mockRepository.fetchEvents("Nowhere", any(), any()) } returns emptyList()
 
         viewModel.searchEvents("Nowhere")
         testScheduler.advanceUntilIdle()

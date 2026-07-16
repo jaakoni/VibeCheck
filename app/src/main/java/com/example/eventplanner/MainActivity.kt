@@ -46,7 +46,10 @@ class MainActivity : ComponentActivity() {
                                     // URL encode the city string to securely support spaces (e.g. "New York" -> "New%20York")
                                     val encodedCity = URLEncoder.encode(city, StandardCharsets.UTF_8.toString())
                                     val route = "search_results/$encodedCity" +
-                                        if (start != null && end != null) "?start=$start&end=$end" else ""
+                                        if (start != null) {
+                                            val finalEnd = end ?: start
+                                            "?start=$start&end=$finalEnd"
+                                        } else ""
                                     navController.navigate(route)
                                 }
                             )
