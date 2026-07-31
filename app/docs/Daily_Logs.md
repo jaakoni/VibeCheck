@@ -1,5 +1,11 @@
 # Daily Logs - Event Planner Project
 
+> [!IMPORTANT]
+> **AI AGENT RULES OF ENGAGEMENT**
+> 1. **Always update the Daily Log:** Whenever making changes to *any* file, add an entry to this `Daily_Logs.md` documenting what was done.
+> 2. **Save Implementation Plans as physical markdown files:** Create a real `.md` file inside the project directory (e.g., `app/docs/`) for every Implementation Plan or Walkthrough so it persists in version control and prevents context loss due to cache resets.
+> 3. **Cross-reference in the Daily Log:** Inside the `Daily_Logs.md` entry, explicitly mention and link to the specific implementation plan file (e.g., `app/docs/Fix_Hardcoded_Dates_Plan.md`) so that future agents know exactly where to find the detailed context of the changes.
+
 ## 2025-05-15
 ### Completed Tasks
 - **UI Enhancement: Search Results Screen**
@@ -79,3 +85,19 @@
   4. Added dynamic "Day Chips" and wired up real-time on-device filtering inside `SearchResultsScreen.kt`.
 - **Testing:** Unit tests executed and passing successfully (`./gradlew test`). Walkthrough and implementation documentation has been logged in `Date_Filtering_Bug_Fix_Walkthrough.md`.
 - **Pending Verification:** Physical Android Device testing (Pixel 8) for the full end-to-end UI experience is queued for tomorrow morning.
+
+## 2026-07-18
+### Completed Tasks
+- **UI Bug Fix: Hardcoded Dates in EventCard**
+    - Identified that `EventCard` within `SearchResultsScreen.kt` was displaying a hardcoded "Sun, Sep 18" and "09:00 AM" regardless of the event data.
+    - Updated `EventCard` to dynamically format the date and time using `SimpleDateFormat` based on the event's `startTimestamp`.
+- **UI Enhancement: Text Contrast on Home Screen**
+    - Addressed user feedback regarding poor visibility on `SearchHomeScreen.kt`.
+    - Explicitly set text inputs (City, Timing, Categories) and their corresponding labels to `Color.Black` and `Color.DarkGray` for placeholders.
+    - Added bold font weights to the labels ("Location", "Timing", "Search Categories") to stand out against the white cards.
+- **Documentation Rules Enforced**
+    - Added the "AI AGENT RULES OF ENGAGEMENT" block to the top of `Daily_Logs.md` to ensure persistent AI behavior when interacting with files.
+    - Created persistent implementation plan files for these UI fixes.
+
+### Reference Documents
+- **Plan Details:** See `app/docs/Fix_Hardcoded_Dates_Plan.md` and `app/docs/Home_Screen_Contrast_Plan.md` for the full implementation plans.

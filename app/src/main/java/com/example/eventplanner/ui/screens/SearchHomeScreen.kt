@@ -85,7 +85,7 @@ fun SearchHomeScreen(
                 Column(modifier = Modifier.padding(16.dp)) {
                     
                     // Location Input (Google Places Autocomplete)
-                    Text("Location", style = MaterialTheme.typography.labelMedium)
+                    Text("Location", style = MaterialTheme.typography.labelMedium, color = Color.Black, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     
                     ExposedDropdownMenuBox(
@@ -98,11 +98,15 @@ fun SearchHomeScreen(
                                 viewModel.updateCity(it)
                                 isDropdownExpanded = true
                             },
-                            placeholder = { Text("Enter City") },
+                            placeholder = { Text("Enter City", color = Color.DarkGray) },
                             leadingIcon = { Icon(Icons.Default.LocationOn, contentDescription = "Location") },
                             modifier = Modifier.menuAnchor().fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp),
-                            singleLine = true
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black
+                            )
                         )
 
                         // The Autocomplete Dropdown List
@@ -125,13 +129,13 @@ fun SearchHomeScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Timing Input
-                    Text("Timing", style = MaterialTheme.typography.labelMedium)
+                    Text("Timing", style = MaterialTheme.typography.labelMedium, color = Color.Black, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = viewModel.getFormattedDateRange().ifEmpty { "" },
                         onValueChange = { },
                         readOnly = true,
-                        placeholder = { Text("Select Dates") },
+                        placeholder = { Text("Select Dates", color = Color.DarkGray) },
                         leadingIcon = { Icon(Icons.Default.DateRange, contentDescription = "Dates") },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -139,8 +143,8 @@ fun SearchHomeScreen(
                         enabled = false, // Prevents typing, relies on clickable overlay
                         shape = RoundedCornerShape(12.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                            disabledPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            disabledTextColor = Color.Black,
+                            disabledPlaceholderColor = Color.DarkGray,
                             disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             disabledBorderColor = MaterialTheme.colorScheme.outline
                         )
@@ -149,7 +153,7 @@ fun SearchHomeScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Category Selector Trigger
-                    Text("Search Categories", style = MaterialTheme.typography.labelMedium)
+                    Text("Search Categories", style = MaterialTheme.typography.labelMedium, color = Color.Black, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedButton(
                         onClick = { showCategoryModal = true },
@@ -164,7 +168,7 @@ fun SearchHomeScreen(
                         }
                         Text(
                             text = categoryText,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = Color.Black
                         )
                     }
 

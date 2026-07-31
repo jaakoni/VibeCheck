@@ -445,6 +445,11 @@ fun EventCard(event: Event, onClick: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    val dateFormatter = SimpleDateFormat("EEE, MMM d", Locale.getDefault())
+                    val timeFormatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                    val dateString = dateFormatter.format(Date(event.startTimestamp))
+                    val timeString = timeFormatter.format(Date(event.startTimestamp))
+
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             Icons.Default.DateRange,
@@ -453,7 +458,7 @@ fun EventCard(event: Event, onClick: () -> Unit) {
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Sun, Sep 18", color = Color(0xFF3D618C), fontSize = 12.dp.value.sp)
+                        Text(dateString, color = Color(0xFF3D618C), fontSize = 12.sp)
                     }
 
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -464,7 +469,7 @@ fun EventCard(event: Event, onClick: () -> Unit) {
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("09:00 AM", color = Color(0xFF3D618C), fontSize = 12.dp.value.sp)
+                        Text(timeString, color = Color(0xFF3D618C), fontSize = 12.sp)
                     }
                 }
             }
