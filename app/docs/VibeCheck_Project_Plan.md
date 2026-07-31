@@ -33,9 +33,11 @@
 *   **Step 5.2:** *Completed:* Integrate the Google Maps API.
 *   **Step 5.3:** *Completed:* Integrate the NWS API for weather.
 
-## Phase 6: Quality Assurance
+## Phase 6: Quality Assurance & User Accounts
 *   **Step 6.1:** *Completed:* Create test plan & write automated unit and UI tests.
 *   **Step 6.2:** *Completed:* Run and execute the test plan on a stable API 33/34 emulator to verify green passes.
+*   **Step 6.3:** *Pending:* Enable login with Google OAuth.
+*   **Step 6.4:** *Pending:* Enable saving events to your profile.
 
 ## Phase 7: Launch Preparation
 *   **Step 7.1:** *Pending:* Load app on physical device.

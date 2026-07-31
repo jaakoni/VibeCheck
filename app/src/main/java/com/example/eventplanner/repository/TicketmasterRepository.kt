@@ -58,13 +58,25 @@ class TicketmasterRepository(private val apiKey: String) {
         val latitude = venue?.location?.latitude?.toDoubleOrNull() ?: 0.0
         val longitude = venue?.location?.longitude?.toDoubleOrNull() ?: 0.0
 
+        // Parse Categories dynamically
+        val segmentName = tmEvent.classifications?.firstOrNull()?.segment?.name ?: ""
+        val mappedCategory = when {
+            segmentName.contains("Music", ignoreCase = true) -> EventCategory.LIVE_MUSIC
+            segmentName.contains("Sports", ignoreCase = true) -> EventCategory.SPORTS_RECREATION
+            segmentName.contains("Arts", ignoreCase = true) || segmentName.contains("Theatre", ignoreCase = true) -> EventCategory.ARTS_CULTURE
+            segmentName.contains("Film", ignoreCase = true) -> EventCategory.ARTS_CULTURE
+            segmentName.contains("Miscellaneous", ignoreCase = true) -> EventCategory.COMMUNITY_FESTIVALS
+            segmentName.contains("Family", ignoreCase = true) -> EventCategory.FAMILY
+            else -> EventCategory.NIGHTLIFE // Fallback
+        }
+
         return Event(
             id = tmEvent.id,
             title = tmEvent.name,
             description = tmEvent.description ?: "Join us for an immersive experience! Check out the event website for more details about scheduling, speakers, and special features.",
             source = EventSource.TICKETMASTER,
             sourceUrl = tmEvent.url,
-            category = EventCategory.LIVE_MUSIC, // Default for now
+            category = mappedCategory,
             startTimestamp = startTimestamp,
             endTimestamp = null,
             cost = null,
@@ -76,7 +88,7 @@ class TicketmasterRepository(private val apiKey: String) {
                 latitude = latitude,
                 longitude = longitude
             ),
-            tags = listOf("Concert", "Live Music", "VibeCheck Choice"),
+            tags = listOf(segmentName, "VibeCheck Choice").filter { it.isNotBlank() },
             organizerName = tmEvent._embedded?.venues?.firstOrNull()?.name ?: "Event Organizer"
         )
     }

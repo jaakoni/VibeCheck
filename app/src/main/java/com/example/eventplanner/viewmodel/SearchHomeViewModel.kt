@@ -20,11 +20,28 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.example.eventplanner.repository.TicketmasterRepository
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+
+import com.example.eventplanner.BuildConfig
+
+sealed class TrendingVibesState {
+    object RequiresCity : TrendingVibesState()
+    object Loading : TrendingVibesState()
+    data class Success(val trendingCategories: List<Pair<EventCategory, Int>>) : TrendingVibesState()
+    object Empty : TrendingVibesState()
+}
 
 class SearchHomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _searchCriteria = MutableStateFlow(SearchCriteria())
     val searchCriteria: StateFlow<SearchCriteria> = _searchCriteria.asStateFlow()
+
+    private val repository = TicketmasterRepository(BuildConfig.TM_API_KEY)
+    private val _trendingVibesState = MutableStateFlow<TrendingVibesState>(TrendingVibesState.RequiresCity)
+    val trendingVibesState: StateFlow<TrendingVibesState> = _trendingVibesState.asStateFlow()
 
     // Google Places Client & State
     private var placesClient: PlacesClient? = null
@@ -39,6 +56,61 @@ class SearchHomeViewModel(application: Application) : AndroidViewModel(applicati
         if (Places.isInitialized()) {
             placesClient = Places.createClient(application)
             sessionToken = AutocompleteSessionToken.newInstance()
+        }
+        
+        // Listen to city changes to update trending vibes
+        viewModelScope.launch {
+            _searchCriteria.map { it.city }.distinctUntilChanged().collectLatest { city ->
+                if (city.trim().isEmpty()) {
+                    _trendingVibesState.value = TrendingVibesState.RequiresCity
+                } else {
+                    fetchTrendingVibes(city)
+                }
+            }
+        }
+    }
+
+    private fun fetchTrendingVibes(city: String) {
+        viewModelScope.launch {
+            _trendingVibesState.value = TrendingVibesState.Loading
+            
+            val startMillis = System.currentTimeMillis()
+            val endMillis = startMillis + (72L * 60 * 60 * 1000) // 72 hours from now
+            
+            try {
+                // Convert millis to ISO strings for Ticketmaster
+                val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
+                    timeZone = java.util.TimeZone.getTimeZone("UTC")
+                }
+                val startIso = formatter.format(Date(startMillis))
+                val endIso = formatter.format(Date(endMillis))
+
+                val events = repository.fetchEvents(
+                    city = city,
+                    startDateTime = startIso,
+                    endDateTime = endIso
+                )
+                
+                if (events.isEmpty()) {
+                    _trendingVibesState.value = TrendingVibesState.Empty
+                } else {
+                    // Aggregate by category, sort descending, take top 2
+                    val topCategories = events
+                        .groupingBy { it.category }
+                        .eachCount()
+                        .toList()
+                        .sortedByDescending { it.second }
+                        .take(2)
+                        
+                    if (topCategories.isEmpty()) {
+                        _trendingVibesState.value = TrendingVibesState.Empty
+                    } else {
+                        _trendingVibesState.value = TrendingVibesState.Success(topCategories)
+                    }
+                }
+            } catch (e: Exception) {
+                _trendingVibesState.value = TrendingVibesState.Empty
+            }
         }
     }
 

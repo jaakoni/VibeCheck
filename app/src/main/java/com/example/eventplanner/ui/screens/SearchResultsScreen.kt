@@ -41,6 +41,7 @@ fun SearchResultsScreen(
     city: String,
     startDate: Long? = null,
     endDate: Long? = null,
+    initialCategory: String? = null,
     onBackClick: () -> Unit,
     onEventClick: (Event) -> Unit,
     viewModel: SearchResultsViewModel = viewModel(),
@@ -48,6 +49,17 @@ fun SearchResultsScreen(
     var selectedDayFilter by remember { mutableStateOf("All Days") }
     var selectedCategoryFilter by remember { mutableStateOf<EventCategory?>(null) }
     var selectedSourceFilter by remember { mutableStateOf("All Sources") }
+    
+    // Explicitly update the selected category filter whenever initialCategory changes from navigation
+    LaunchedEffect(initialCategory) {
+        if (initialCategory != null) {
+            try {
+                selectedCategoryFilter = EventCategory.valueOf(initialCategory)
+            } catch (e: Exception) {
+                selectedCategoryFilter = null
+            }
+        }
+    }
 
     val uiState by viewModel.eventsState.collectAsState()
 

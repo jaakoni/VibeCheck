@@ -30,14 +30,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.eventplanner.model.EventCategory
 import com.example.eventplanner.viewmodel.SearchHomeViewModel
 
+import com.example.eventplanner.viewmodel.TrendingVibesState
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchHomeScreen(
     viewModel: SearchHomeViewModel = viewModel(),
-    onSearchClicked: (city: String, start: Long?, end: Long?) -> Unit
+    onSearchClicked: (city: String, start: Long?, end: Long?) -> Unit,
+    onTrendingCategoryClicked: (city: String, category: EventCategory, start: Long, end: Long) -> Unit
 ) {
     val searchCriteria by viewModel.searchCriteria.collectAsState()
     val cityPredictions by viewModel.cityPredictions.collectAsState()
+    val trendingVibesState by viewModel.trendingVibesState.collectAsState()
     
     var showCategoryModal by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
@@ -196,7 +200,7 @@ fun SearchHomeScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Trending Vibes Section (Placeholders)
+            // Trending Vibes Section
             Text(
                 text = "Trending Vibes",
                 style = MaterialTheme.typography.titleLarge,
@@ -204,9 +208,63 @@ fun SearchHomeScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                TrendingCard(title = "Live Concert", category = "Music", modifier = Modifier.weight(1f))
-                TrendingCard(title = "Morning Yoga", category = "Health", modifier = Modifier.weight(1f))
+            when (val state = trendingVibesState) {
+                is TrendingVibesState.RequiresCity -> {
+                    Card(
+                        modifier = Modifier.fillMaxWidth().height(150.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(
+                                "Enter a location above to see what's trending near you.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+                is TrendingVibesState.Loading -> {
+                    Box(modifier = Modifier.fillMaxWidth().height(150.dp), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
+                is TrendingVibesState.Empty -> {
+                    Card(
+                        modifier = Modifier.fillMaxWidth().height(150.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(
+                                "No trending vibes for the next 72 hours.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+                is TrendingVibesState.Success -> {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        state.trendingCategories.forEach { (category, count) ->
+                            TrendingCard(
+                                title = "$count Events", 
+                                category = category.displayName, 
+                                modifier = Modifier.weight(1f),
+                                onClick = {
+                                    val startMillis = System.currentTimeMillis()
+                                    val endMillis = startMillis + (72L * 60 * 60 * 1000)
+                                    onTrendingCategoryClicked(searchCriteria.city, category, startMillis, endMillis)
+                                }
+                            )
+                        }
+                        
+                        // If only 1 category exists, add a spacer to maintain UI grid balance
+                        if (state.trendingCategories.size == 1) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+                    }
+                }
             }
         }
     }
@@ -328,9 +386,9 @@ fun CategoryChip(category: EventCategory, isSelected: Boolean, onClick: () -> Un
 }
 
 @Composable
-fun TrendingCard(title: String, category: String, modifier: Modifier = Modifier) {
+fun TrendingCard(title: String, category: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Card(
-        modifier = modifier.height(150.dp),
+        modifier = modifier.height(150.dp).clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {

@@ -24,7 +24,24 @@ data class TicketmasterEvent(
     val images: List<TicketmasterImage> = emptyList(),
     val description: String? = null,
     val dates: TicketmasterDates? = null,
+    val classifications: List<TicketmasterClassification>? = null,
     val _embedded: TicketmasterEventEmbedded? = null
+)
+
+@Serializable
+data class TicketmasterClassification(
+    val segment: TicketmasterSegment? = null,
+    val genre: TicketmasterGenre? = null
+)
+
+@Serializable
+data class TicketmasterSegment(
+    val name: String? = null
+)
+
+@Serializable
+data class TicketmasterGenre(
+    val name: String? = null
 )
 
 @Serializable

@@ -3,8 +3,8 @@
 > [!IMPORTANT]
 > **AI AGENT RULES OF ENGAGEMENT**
 > 1. **Always update the Daily Log:** Whenever making changes to *any* file, add an entry to this `Daily_Logs.md` documenting what was done.
-> 2. **Save Implementation Plans as physical markdown files:** Create a real `.md` file inside the project directory (e.g., `app/docs/`) for every Implementation Plan or Walkthrough so it persists in version control and prevents context loss due to cache resets.
-> 3. **Cross-reference in the Daily Log:** Inside the `Daily_Logs.md` entry, explicitly mention and link to the specific implementation plan file (e.g., `app/docs/Fix_Hardcoded_Dates_Plan.md`) so that future agents know exactly where to find the detailed context of the changes.
+> 2. **Save Implementation Plans:** Create a real `.md` file inside the `app/implementation_plans/` folder for every Implementation Plan or Walkthrough so it persists in version control and prevents context loss due to AI Assistant cache resets.
+> 3. **Cross-reference in the Daily Log:** Inside the `Daily_Logs.md` entry, explicitly mention and link to the specific implementation plan file (e.g., `app/implementation_plans/Trending_Vibes_Plan.md`) so that future agents know exactly where to find the detailed context of the changes.
 
 ## 2025-05-15
 ### Completed Tasks
@@ -95,9 +95,17 @@
     - Addressed user feedback regarding poor visibility on `SearchHomeScreen.kt`.
     - Explicitly set text inputs (City, Timing, Categories) and their corresponding labels to `Color.Black` and `Color.DarkGray` for placeholders.
     - Added bold font weights to the labels ("Location", "Timing", "Search Categories") to stand out against the white cards.
+- **Feature: Dynamic Trending Vibes (72-Hour Lookahead)**
+    - Replaced the static Home Screen Trending Vibes section with dynamic categories powered by `SearchHomeViewModel.kt`.
+    - Implemented a zero-state UI when no city is selected.
+    - Wired up navigation so tapping a trending card routes to `SearchResultsScreen.kt` with a 72-hour date filter and pre-selected category chip.
+- **Bug Fix & Data Enhancement: Category Pre-selection and Ticketmaster Mapping**
+    - Fixed a bug where `SearchResultsScreen.kt` failed to highlight the category chip when navigating from Trending Vibes by implementing a `LaunchedEffect`.
+    - Overhauled `TicketmasterApiService.kt` and `TicketmasterRepository.kt` to actually parse the `classifications` payload, mapping real-world Ticketmaster segments (Sports, Arts, Music) to our internal `EventCategory` enum instead of hardcoding everything as Live Music.
 - **Documentation Rules Enforced**
     - Added the "AI AGENT RULES OF ENGAGEMENT" block to the top of `Daily_Logs.md` to ensure persistent AI behavior when interacting with files.
-    - Created persistent implementation plan files for these UI fixes.
+    - Created the `app/implementation_plans/` directory and saved persistent `.md` implementation plan files for all changes.
+    - Added OAuth and Event Saving tasks to the Project Plan MVP roadmap.
 
 ### Reference Documents
-- **Plan Details:** See `app/docs/Fix_Hardcoded_Dates_Plan.md` and `app/docs/Home_Screen_Contrast_Plan.md` for the full implementation plans.
+- **Plan Details:** See `app/docs/Fix_Hardcoded_Dates_Plan.md`, `app/docs/Home_Screen_Contrast_Plan.md`, `app/implementation_plans/Trending_Vibes_Plan.md`, and `app/implementation_plans/Category_Preselection_Bug_Plan.md` for the full implementation plans.

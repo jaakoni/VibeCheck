@@ -43,7 +43,6 @@ class MainActivity : ComponentActivity() {
                         composable("search_home") {
                             SearchHomeScreen(
                                 onSearchClicked = { city, start, end ->
-                                    // URL encode the city string to securely support spaces (e.g. "New York" -> "New%20York")
                                     val encodedCity = URLEncoder.encode(city, StandardCharsets.UTF_8.toString())
                                     val route = "search_results/$encodedCity" +
                                         if (start != null) {
@@ -51,26 +50,34 @@ class MainActivity : ComponentActivity() {
                                             "?start=$start&end=$finalEnd"
                                         } else ""
                                     navController.navigate(route)
+                                },
+                                onTrendingCategoryClicked = { city, category, start, end ->
+                                    val encodedCity = URLEncoder.encode(city, StandardCharsets.UTF_8.toString())
+                                    val encodedCategory = URLEncoder.encode(category.name, StandardCharsets.UTF_8.toString())
+                                    navController.navigate("search_results/$encodedCity?start=$start&end=$end&category=$encodedCategory")
                                 }
                             )
                         }
                         
-                        // Transition path expects city argument and optional start/end date filters
+                        // Transition path expects city argument and optional start/end date and category filters
                         composable(
-                            route = "search_results/{city}?start={start}&end={end}",
+                            route = "search_results/{city}?start={start}&end={end}&category={category}",
                             arguments = listOf(
                                 navArgument("city") { type = NavType.StringType },
                                 navArgument("start") { type = NavType.LongType; defaultValue = -1L },
-                                navArgument("end") { type = NavType.LongType; defaultValue = -1L }
+                                navArgument("end") { type = NavType.LongType; defaultValue = -1L },
+                                navArgument("category") { type = NavType.StringType; nullable = true }
                             )
                         ) { backStackEntry ->
                             val city = backStackEntry.arguments?.getString("city") ?: "Atlanta"
                             val start = backStackEntry.arguments?.getLong("start") ?: -1L
                             val end = backStackEntry.arguments?.getLong("end") ?: -1L
+                            val categoryStr = backStackEntry.arguments?.getString("category")
                             SearchResultsScreen(
                                 city = city,
                                 startDate = if (start != -1L) start else null,
                                 endDate = if (end != -1L) end else null,
+                                initialCategory = categoryStr,
                                 onBackClick = {
                                     navController.popBackStack()
                                 },
