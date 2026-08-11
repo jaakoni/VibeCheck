@@ -106,7 +106,7 @@ fun SearchResultsScreen(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
             )
         },
-        bottomBar = { BottomNavigationPlaceholder() }
+        bottomBar = { BottomNavigationPlaceholder() },
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -246,7 +246,7 @@ fun SearchResultsScreen(
 
                         val matchesDate = if (startDate != null && endDate != null) {
                             // Ensure the event start falls within the selected range (adding 24 hours in millis to the end date to include the full final day)
-                            (event.startTimestamp >= startDate) && (event.startTimestamp <= (endDate + 86400000L))
+                            ((event.startTimestamp >= startDate) && (event.startTimestamp <= (endDate + 86400000L)))
                         } else {
                             true
                         }
@@ -423,17 +423,11 @@ fun EventCard(event: Event, onClick: () -> Unit) {
                     }
 
                     // Price Tag
-                    val costValue = event.cost
-                    Text(
-                        text = when {
-                            costValue == null -> "Price N/A"
-                            costValue == 0.0 -> "Free"
-                            else -> "$${String.format(Locale.getDefault(), "%.2f", costValue)}"
-                        },
-                        color = Color(0xFF3D618C),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    when (val costValue = event.cost) {
+                        null -> Text("Price N/A", color = Color(0xFF3D618C), fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                        0.0 -> Text("Free", color = Color(0xFF3D618C), fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                        else -> Text("$${String.format(Locale.getDefault(), "%.2f", costValue)}", color = Color(0xFF3D618C), fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                    }
 
                     // Source Badge
                     Box(
@@ -503,7 +497,7 @@ fun EventCard(event: Event, onClick: () -> Unit) {
 
 private fun parseCategories(categoryString: String?): Set<EventCategory> {
     if (categoryString == null || categoryString.trim().isEmpty()) return emptySet()
-    return categoryString.split(",").mapNotNull { name ->
+    return categoryString.split(",").asSequence().mapNotNull { name ->
         try {
             EventCategory.valueOf(name.trim())
         } catch (_: Exception) {

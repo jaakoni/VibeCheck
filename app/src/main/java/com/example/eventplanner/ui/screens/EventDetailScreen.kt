@@ -87,7 +87,7 @@ fun EventDetailScreen(
                         Icon(Icons.Default.Share, contentDescription = "Share", tint = Color(0xFF5450C1))
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
             )
         },
         bottomBar = { BottomNavigationPlaceholder() }

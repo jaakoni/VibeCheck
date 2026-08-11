@@ -12,10 +12,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.eventplanner.ui.screens.EventDetailScreen
+import com.example.eventplanner.ui.screens.LoginScreen
+import com.example.eventplanner.ui.screens.ProfileScreen
 import com.example.eventplanner.ui.screens.SearchHomeScreen
 import com.example.eventplanner.ui.screens.SearchResultsScreen
 import com.example.eventplanner.ui.theme.EventPlannerTheme
+import com.example.eventplanner.viewmodel.AuthViewModel
 import com.google.android.libraries.places.api.Places
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -35,10 +41,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     val navController = rememberNavController()
+                    val authViewModel: AuthViewModel = viewModel()
+                    val currentUser by authViewModel.currentUser.collectAsState()
 
                     NavHost(
                         navController = navController,
-                        startDestination = "search_home"
+                        startDestination = "search_home",
                     ) {
                         composable("search_home") {
                             SearchHomeScreen(
@@ -62,7 +70,45 @@ class MainActivity : ComponentActivity() {
                                     val encodedCity = URLEncoder.encode(city, StandardCharsets.UTF_8.toString())
                                     val encodedCategory = URLEncoder.encode(category.name, StandardCharsets.UTF_8.toString())
                                     navController.navigate("search_results/$encodedCity?start=$start&end=$end&category=$encodedCategory")
-                                }
+                                },
+                                onProfileClick = {
+                                    if (currentUser != null) {
+                                        navController.navigate("profile")
+                                    } else {
+                                        navController.navigate("login")
+                                    }
+                                },
+                            )
+                        }
+
+                        // Login Screen Route
+                        composable("login") {
+                            LoginScreen(
+                                authViewModel = authViewModel,
+                                webClientId = "960871076699-aih87oghdcrg70iij4sdif0dl536b3rj.apps.googleusercontent.com",
+                                onLoginSuccess = {
+                                    navController.navigate("profile") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                },
+                                onBackClick = {
+                                    navController.popBackStack()
+                                },
+                            )
+                        }
+
+                        // User Profile Route
+                        composable("profile") {
+                            ProfileScreen(
+                                authViewModel = authViewModel,
+                                onBackClick = {
+                                    navController.popBackStack()
+                                },
+                                onSignOutSuccess = {
+                                    navController.navigate("search_home") {
+                                        popUpTo("search_home") { inclusive = true }
+                                    }
+                                },
                             )
                         }
                         

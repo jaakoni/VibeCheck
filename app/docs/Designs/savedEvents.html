@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Saved Events - VibeCheck</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Public+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#fbf7ff",
+                    "on-error-container": "#6e0523",
+                    "background": "#f8f9ff",
+                    "surface-dim": "#c4dcff",
+                    "tertiary-container": "#fe932c",
+                    "secondary-fixed": "#89f5e7",
+                    "primary-dim": "#4843b4",
+                    "inverse-surface": "#000f21",
+                    "on-error": "#fff7f7",
+                    "outline": "#5a7da9",
+                    "on-surface-variant": "#3d618c",
+                    "secondary-fixed-dim": "#7ae7d8",
+                    "surface-bright": "#f8f9ff",
+                    "primary": "#5450c1",
+                    "on-primary-fixed-variant": "#14007b",
+                    "primary-fixed": "#8c88fd",
+                    "secondary-container": "#89f5e7",
+                    "primary-container": "#8c88fd",
+                    "on-secondary": "#e2fff9",
+                    "on-secondary-fixed-variant": "#00675e",
+                    "surface-container-high": "#dce9ff",
+                    "surface-variant": "#d2e4ff",
+                    "on-secondary-container": "#005c54",
+                    "surface-container-low": "#eff4ff",
+                    "error-dim": "#6b0221",
+                    "on-tertiary": "#fff7f4",
+                    "inverse-on-surface": "#8e9eb7",
+                    "on-background": "#05345c",
+                    "on-secondary-fixed": "#004841",
+                    "on-primary-fixed": "#000000",
+                    "inverse-primary": "#8c88fd",
+                    "tertiary-fixed-dim": "#ed871e",
+                    "tertiary-dim": "#804300",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#f8f9ff",
+                    "error": "#a8364b",
+                    "tertiary-fixed": "#fe932c",
+                    "on-tertiary-fixed": "#240f00",
+                    "outline-variant": "#91b4e4",
+                    "surface-tint": "#5450c1",
+                    "error-container": "#f97386",
+                    "on-tertiary-container": "#4a2500",
+                    "on-tertiary-fixed-variant": "#572c00",
+                    "tertiary": "#914d00",
+                    "primary-fixed-dim": "#7f7bef",
+                    "on-primary-container": "#0c005c",
+                    "surface-container-highest": "#d2e4ff",
+                    "secondary-dim": "#005e56",
+                    "secondary": "#006b62",
+                    "on-surface": "#05345c",
+                    "surface-container": "#e5eeff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                "safe": "env(safe-area-inset-bottom)"
+            },
+            "fontFamily": {
+                    "headline": ["Public Sans", "sans-serif"],
+                    "display": ["Public Sans", "sans-serif"],
+                    "body": ["Inter", "sans-serif"],
+                    "label": ["Inter", "sans-serif"]
+            },
+            "fontSize": {}
+    },
+        },
+      }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .backdrop-blur-md {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased min-h-screen pb-24 pt-20">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-slate-900/80 backdrop-blur-md font-headline tracking-tight text-lg font-bold text-primary flex justify-between items-center px-6 h-16 shadow-none">
+<button aria-label="Menu" class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity scale-95 duration-200">menu</button>
+<span>Curated Events</span>
+<button aria-label="Profile" class="hover:opacity-80 transition-opacity scale-95 duration-200">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden" data-alt="A sophisticated, high-fashion portrait of a person used as a user avatar, set against a bright, minimalist background in a modern light-mode aesthetic, utilizing organic tones and soft lighting to convey a premium feel." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC0MpRHVgKsW3ASKXwR3OssVfQZJi1y8a4vb5zqdo2YPTk8sPiU_9sxX4BWnpyreWr92jyxiETFkEmbur9-H5-TMp-K0-kWm6rr7fZ7Ho2A5jbcjcMx6ZIdfk69lBZY4xPuaGUVl7l3OcY1eiW4MI72svUzRO1NvI0AudCXg60zRw5qmlh-8IK7V8ZmHD9IStHhTYi7W9fnEbk997cLZ_yuAfmHG_csXsxEp6NIsN_HbxlG_smd8_3E'); background-size: cover; background-position: center;"></div>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-6 max-w-2xl mx-auto space-y-12">
+<!-- Header Section -->
+<section class="pt-8">
+<h1 class="font-display text-5xl font-extrabold tracking-tight text-on-background mb-4 -ml-1">Saved</h1>
+<p class="font-body text-lg text-on-surface-variant max-w-md">Your curated collection of upcoming experiences.</p>
+</section>
+<!-- Events List -->
+<section class="space-y-6">
+<h2 class="font-display text-xl font-bold text-on-background">Upcoming</h2>
+<!-- Event Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden group cursor-pointer">
+<div class="relative h-48 w-full bg-surface-container-low" data-alt="A high-end editorial photograph of a modern jazz performance in a sophisticated, dimly lit venue with bright, airy light-mode accents filtering through large windows, showcasing deep indigo shadows and warm organic tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBZCU-4TvMM4IR0Kkli_ImF1A4iWrYK3xdpwMIw5ZvYpdW3KIoPlLjVWWDVjcK2bWNiTltPVkeNTgaNmj3sG62grjXMa9m7u0EHApdljIiVnN_sTIWyVphKpUvRsN6g2PHCh4_BFUIbDoasz3vOVtQwtt5Vy-o1acz3SvkY1wT2RenFkQeA-PmT4trgQFYtmEmZKwmXrJcRdSTBjlddqk9B7uHb8OSlvL9Rg4LR6oM15TotA073VR2Q'); background-size: cover; background-position: center;">
+<!-- Glassmorphism Badge -->
+<div class="absolute top-4 left-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary">local_activity</span>
+<span class="font-label text-xs font-medium text-on-background">Ticketmaster</span>
+</div>
+<!-- Save Button -->
+<button aria-label="Unsave Event" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface/80 backdrop-blur-md flex items-center justify-center text-primary hover:bg-surface-container-low transition-colors shadow-[0_4px_24px_rgba(5,52,92,0.06)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</div>
+<div class="p-5 relative">
+<!-- Floating Date Box -->
+<div class="absolute -top-10 left-5 bg-surface-container-lowest rounded-lg p-2 text-center shadow-[0_4px_24px_rgba(5,52,92,0.06)] min-w-[3.5rem]">
+<div class="font-label text-xs text-on-surface-variant uppercase font-semibold">Oct</div>
+<div class="font-display text-xl font-bold text-on-background">14</div>
+</div>
+<div class="mt-4 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-lg font-bold text-on-background mb-1">Blue Note Residency</h3>
+<p class="font-body text-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                Blue Note Club, NYC
+                            </p>
+</div>
+<div class="text-right">
+<span class="font-headline font-bold text-on-background">$45</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Event Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden group cursor-pointer">
+<div class="relative h-48 w-full bg-surface-container-low" data-alt="An abstract, modern digital art installation in a minimalist white gallery space, illuminated by soft, high-key white lighting, creating a serene and technologically advanced aesthetic fitting a bright, premium UI." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCcU2T_y_YdewR6b3MX5Oe9vQny-VpuUnkIUu322489UIAAULlFfOTaM_o9QL21n1Mg_Nn6CDkFImYqQ9lRIqU6muRQomqxqy6Ih-se5yC_UDHLmAYKkF6v3B_1ASkEcLKNwJnTuvnPnRLquYuuTfZYMhw43mpdrZyCAoRS1nPOGffpkaH_ulunlWKnHcqcGfE2oKhoQxVpfSsuSVcFSI3Wx_zXXvUQvhNEXrNPJP3VK2zCRqqlzaAS'); background-size: cover; background-position: center;">
+<!-- Glassmorphism Badge -->
+<div class="absolute top-4 left-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">museum</span>
+<span class="font-label text-xs font-medium text-on-background">Eventbrite</span>
+</div>
+<!-- Save Button -->
+<button aria-label="Unsave Event" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface/80 backdrop-blur-md flex items-center justify-center text-primary hover:bg-surface-container-low transition-colors shadow-[0_4px_24px_rgba(5,52,92,0.06)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</div>
+<div class="p-5 relative">
+<!-- Floating Date Box -->
+<div class="absolute -top-10 left-5 bg-surface-container-lowest rounded-lg p-2 text-center shadow-[0_4px_24px_rgba(5,52,92,0.06)] min-w-[3.5rem]">
+<div class="font-label text-xs text-on-surface-variant uppercase font-semibold">Oct</div>
+<div class="font-display text-xl font-bold text-on-background">22</div>
+</div>
+<div class="mt-4 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-lg font-bold text-on-background mb-1">Luminous Echoes Exhibit</h3>
+<p class="font-body text-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                The Modern Atrium
+                            </p>
+</div>
+<div class="text-right">
+<span class="font-headline font-bold text-on-background">Free</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Event Card 3 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden group cursor-pointer">
+<div class="relative h-48 w-full bg-surface-container-low" data-alt="A beautifully styled, minimalist artisanal coffee cupping session, featuring clean white cups on a light wooden table bathed in bright, soft natural light, conveying a sophisticated and airy aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAMpfo0dZwZ4PvyQ1Ie6FYu8UrZpAhWmFwTrmVu6qB3dDdws8R_DDb-GH18vSpOhIo50vQ5hvZa0lGl_G7qw4iiIFgGFTDfHXp6DWQEFQ3HZTaQCxi3Z7YK88wlow5t0r1W_y5waIX0Si9d9FxP80J1YcuiEzjeOViGzaYdSiQ8HOedZV_kWiDJTMG3l4iFf1rnmTSf24BAz0psVfQ_TT35kUZijxYQv4rvmp2awx07pQMdD_cHTaaT'); background-size: cover; background-position: center;">
+<!-- Glassmorphism Badge -->
+<div class="absolute top-4 left-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary">coffee</span>
+<span class="font-label text-xs font-medium text-on-background">Dice</span>
+</div>
+<!-- Save Button -->
+<button aria-label="Unsave Event" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface/80 backdrop-blur-md flex items-center justify-center text-primary hover:bg-surface-container-low transition-colors shadow-[0_4px_24px_rgba(5,52,92,0.06)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</div>
+<div class="p-5 relative">
+<!-- Floating Date Box -->
+<div class="absolute -top-10 left-5 bg-surface-container-lowest rounded-lg p-2 text-center shadow-[0_4px_24px_rgba(5,52,92,0.06)] min-w-[3.5rem]">
+<div class="font-label text-xs text-on-surface-variant uppercase font-semibold">Nov</div>
+<div class="font-display text-xl font-bold text-on-background">03</div>
+</div>
+<div class="mt-4 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-lg font-bold text-on-background mb-1">Artisanal Roasters Tasting</h3>
+<p class="font-body text-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                Beacon Roastery
+                            </p>
+</div>
+<div class="text-right">
+<span class="font-headline font-bold text-on-background">$15</span>
+</div>
+</div>
+</div>
+</article>
+</section>
+<div class="h-12"></div> <!-- Spacer for scrolling past Bottom Nav -->
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface/80 dark:bg-slate-900/80 backdrop-blur-md font-inter text-xs font-medium flex justify-around items-center h-20 pb-safe shadow-[0_-4px_24px_rgba(5,52,92,0.06)] rounded-t-none bg-surface-container-low">
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-primary transition-colors tap-highlight-none active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1">explore</span>
+<span>Discover</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-primary transition-colors tap-highlight-none active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1">search</span>
+<span>Search</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-container hover:text-primary transition-colors tap-highlight-none active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+<span>Saved</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-primary transition-colors tap-highlight-none active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1">person</span>
+<span>Profile</span>
+</button>
+</nav>
+</body></html>

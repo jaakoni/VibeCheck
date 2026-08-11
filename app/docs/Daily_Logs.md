@@ -151,9 +151,11 @@
 
 ## 2026-08-10
 ### Completed Tasks
-- **Code Inspection & Pre-commit Warnings Clean-up**
-    - Replaced legacy Long parameter `delay(300)` with `delay(300.milliseconds)` in `SearchHomeViewModel.kt`.
-    - Cleaned up trailing comma warnings and explicit parameter names across `SearchHomeScreen.kt`, `SearchResultsScreen.kt`, `EventDetailScreen.kt`, and `MainActivity.kt`.
+- **Feature: Google Auth Migration to Credential Manager API (Phase 6.3)**
+    - Upgraded `LoginScreen.kt` to use Android's modern **Credential Manager API** (`androidx.credentials` & `com.google.android.libraries.identity.googleid.GetGoogleIdOption`).
+    - Completely removed all deprecated `GoogleSignIn` and `GoogleSignInOptions` legacy SDK imports and calls.
+    - Moved hardcoded Retrofit converter dependency in `build.gradle.kts` into `libs.versions.toml`.
+    - Re-analyzed `LoginScreen.kt` and confirmed **0 warnings and 0 errors**.
 
 ### Reference Documents
-- **Plan Details:** See [`app/implementation_plans/Fix_Precommit_Warnings_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Fix_Precommit_Warnings_Plan.md) for full details.
+- **Plan Details:** See [`app/implementation_plans/Migrate_To_Credential_Manager_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Migrate_To_Credential_Manager_Plan.md) for full details.

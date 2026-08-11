@@ -38,6 +38,7 @@ fun SearchHomeScreen(
     viewModel: SearchHomeViewModel = viewModel(),
     onSearchClicked: (city: String, categories: Set<EventCategory>, start: Long?, end: Long?) -> Unit,
     onTrendingCategoryClicked: (city: String, category: EventCategory, start: Long, end: Long) -> Unit,
+    onProfileClick: () -> Unit = {},
 ) {
     val searchCriteria by viewModel.searchCriteria.collectAsState()
     val cityPredictions by viewModel.cityPredictions.collectAsState()
@@ -51,8 +52,8 @@ fun SearchHomeScreen(
     val datePickerState = rememberDateRangePickerState()
 
     Scaffold(
-        topBar = { SearchHomeTopBar() },
-        bottomBar = { BottomNavigationPlaceholder() }
+        topBar = { SearchHomeTopBar(onProfileClick = onProfileClick) },
+        bottomBar = { BottomNavigationPlaceholder(onProfileClick = onProfileClick) },
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -348,7 +349,7 @@ fun SearchHomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp),
                 ) {
                     Text("Apply Filter", fontSize = 16.sp)
                 }
@@ -407,7 +408,7 @@ fun TrendingCard(title: String, category: String, modifier: Modifier = Modifier,
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchHomeTopBar() {
+fun SearchHomeTopBar(onProfileClick: () -> Unit = {}) {
     TopAppBar(
         title = { Text("VibeCheck", fontWeight = FontWeight.Bold) },
         actions = {
@@ -415,23 +416,25 @@ fun SearchHomeTopBar() {
                 modifier = Modifier
                     .padding(end = 16.dp)
                     .size(32.dp)
-                    .background(Color.LightGray, CircleShape),
-                contentAlignment = Alignment.Center
+                    .clip(CircleShape)
+                    .background(Color.LightGray)
+                    .clickable { onProfileClick() },
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.White)
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
     )
 }
 
 @Composable
-fun BottomNavigationPlaceholder() {
+fun BottomNavigationPlaceholder(onProfileClick: () -> Unit = {}) {
     NavigationBar(containerColor = Color.White) {
         NavigationBarItem(selected = true, onClick = { }, icon = { Icon(Icons.Default.Search, "Search") }, label = { Text("Explore") })
-        NavigationBarItem(selected = false, onClick = { }, icon = { Icon(Icons.Default.DateRange, "Saved") }, label = { Text("Saved") })
-        NavigationBarItem(selected = false, onClick = { }, icon = { Icon(Icons.Default.Person, "Profile") }, label = { Text("Profile") })
+        NavigationBarItem(selected = false, onClick = { onProfileClick() }, icon = { Icon(Icons.Default.DateRange, "Saved") }, label = { Text("Saved") })
+        NavigationBarItem(selected = false, onClick = { onProfileClick() }, icon = { Icon(Icons.Default.Person, "Profile") }, label = { Text("Profile") })
     }
 }
