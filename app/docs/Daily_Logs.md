@@ -152,11 +152,8 @@
 ## 2026-08-10
 ### Completed Tasks
 - **Code Inspection & Pre-commit Warnings Clean-up**
-    - Cleaned up deprecated Material 3 API usage (`Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true)`).
-    - Removed unused imports and unused exception parameter bindings (`catch (_: Exception)`).
-    - Replaced `for (i in 0 until 7)` loop with `repeat(7)`.
-    - Replaced `Uri.parse(...)` with Kotlin KTX `.toUri()`.
-    - Cleaned up type parameters and expression parentheses across `SearchHomeScreen.kt`, `SearchResultsScreen.kt`, `EventDetailScreen.kt`, `SearchHomeViewModel.kt`, and `TicketmasterRepository.kt`.
+    - Replaced legacy Long parameter `delay(300)` with `delay(300.milliseconds)` in `SearchHomeViewModel.kt`.
+    - Cleaned up trailing comma warnings and explicit parameter names across `SearchHomeScreen.kt`, `SearchResultsScreen.kt`, `EventDetailScreen.kt`, and `MainActivity.kt`.
 
 ### Reference Documents
 - **Plan Details:** See [`app/implementation_plans/Fix_Precommit_Warnings_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Fix_Precommit_Warnings_Plan.md) for full details.

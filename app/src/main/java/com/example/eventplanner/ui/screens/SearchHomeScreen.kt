@@ -37,15 +37,15 @@ import com.example.eventplanner.viewmodel.TrendingVibesState
 fun SearchHomeScreen(
     viewModel: SearchHomeViewModel = viewModel(),
     onSearchClicked: (city: String, categories: Set<EventCategory>, start: Long?, end: Long?) -> Unit,
-    onTrendingCategoryClicked: (city: String, category: EventCategory, start: Long, end: Long) -> Unit
+    onTrendingCategoryClicked: (city: String, category: EventCategory, start: Long, end: Long) -> Unit,
 ) {
     val searchCriteria by viewModel.searchCriteria.collectAsState()
     val cityPredictions by viewModel.cityPredictions.collectAsState()
     val trendingVibesState by viewModel.trendingVibesState.collectAsState()
     
-    var showCategoryModal by remember { mutableStateOf(false) }
-    var showDatePicker by remember { mutableStateOf(false) }
-    var isDropdownExpanded by remember { mutableStateOf(false) }
+    var showCategoryModal by remember { mutableStateOf(value = false) }
+    var showDatePicker by remember { mutableStateOf(value = false) }
+    var isDropdownExpanded by remember { mutableStateOf(value = false) }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val datePickerState = rememberDateRangePickerState()

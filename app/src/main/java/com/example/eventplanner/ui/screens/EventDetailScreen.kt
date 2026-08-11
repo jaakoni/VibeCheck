@@ -54,7 +54,7 @@ import java.util.Locale
 fun EventDetailScreen(
     eventId: String,
     onBackClick: () -> Unit,
-    viewModel: EventDetailViewModel = viewModel()
+    viewModel: EventDetailViewModel = viewModel(),
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()

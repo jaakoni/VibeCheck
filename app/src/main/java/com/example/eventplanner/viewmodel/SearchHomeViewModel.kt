@@ -12,6 +12,7 @@ import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRe
 import com.google.android.libraries.places.api.net.PlacesClient
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -108,7 +109,7 @@ class SearchHomeViewModel(application: Application) : AndroidViewModel(applicati
                         _trendingVibesState.value = TrendingVibesState.Success(topCategories)
                     }
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _trendingVibesState.value = TrendingVibesState.Empty
             }
         }
@@ -130,7 +131,7 @@ class SearchHomeViewModel(application: Application) : AndroidViewModel(applicati
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             // Debounce: Wait 300ms before making the API call
-            delay(300)
+            delay(300.milliseconds)
             
             val request = FindAutocompletePredictionsRequest.builder()
                 .setSessionToken(sessionToken)
