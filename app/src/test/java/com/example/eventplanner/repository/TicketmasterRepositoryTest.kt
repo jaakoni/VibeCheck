@@ -42,6 +42,7 @@ class TicketmasterRepositoryTest {
                         url = "http://mock.com",
                         dates = TicketmasterDates(TicketmasterStartDates("2026-08-14", "20:00:00")),
                         images = listOf(TicketmasterImage("http://mock-image.com")),
+                        classifications = listOf(TicketmasterClassification(TicketmasterSegment("Music"))),
                         _embedded = TicketmasterEventEmbedded(
                             venues = listOf(
                                 TicketmasterVenue(

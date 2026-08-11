@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -47,18 +48,16 @@ fun SearchResultsScreen(
     viewModel: SearchResultsViewModel = viewModel(),
 ) {
     var selectedDayFilter by remember { mutableStateOf("All Days") }
-    var selectedCategoryFilter by remember { mutableStateOf<EventCategory?>(null) }
+    var selectedCategoryFilters by remember(initialCategory) {
+        mutableStateOf(
+            parseCategories(initialCategory),
+        )
+    }
     var selectedSourceFilter by remember { mutableStateOf("All Sources") }
     
-    // Explicitly update the selected category filter whenever initialCategory changes from navigation
+    // Explicitly update the selected category filters whenever initialCategory changes from navigation
     LaunchedEffect(initialCategory) {
-        if (initialCategory != null) {
-            try {
-                selectedCategoryFilter = EventCategory.valueOf(initialCategory)
-            } catch (e: Exception) {
-                selectedCategoryFilter = null
-            }
-        }
+        selectedCategoryFilters = parseCategories(initialCategory)
     }
 
     val uiState by viewModel.eventsState.collectAsState()
@@ -77,7 +76,7 @@ fun SearchResultsScreen(
         } else {
             // Generate for next 7 days starting today
             var currentDate = System.currentTimeMillis()
-            for (i in 0 until 7) {
+            repeat(7) {
                 list.add(formatter.format(Date(currentDate)))
                 currentDate += 86400000L
             }
@@ -155,9 +154,13 @@ fun SearchResultsScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(EventCategory.entries) { category ->
-                        val isSelected = selectedCategoryFilter == category
+                        val isSelected = selectedCategoryFilters.contains(category)
                         CategoryFilterChip(category = category, isSelected = isSelected) {
-                            selectedCategoryFilter = if (isSelected) null else category
+                            selectedCategoryFilters = if (isSelected) {
+                                selectedCategoryFilters - category
+                            } else {
+                                selectedCategoryFilters + category
+                            }
                         }
                     }
                 }
@@ -224,7 +227,7 @@ fun SearchResultsScreen(
                 }
                 is SearchResultsUiState.Success -> {
                     val filteredEvents = state.events.filter { event ->
-                        val matchesCategory = selectedCategoryFilter == null || event.category == selectedCategoryFilter
+                        val matchesCategory = selectedCategoryFilters.isEmpty() || selectedCategoryFilters.contains(event.category)
                         val matchesSource = when (selectedSourceFilter) {
                             "All Sources" -> true
                             "Eventbrite" -> event.source == EventSource.EVENTBRITE
@@ -243,7 +246,7 @@ fun SearchResultsScreen(
 
                         val matchesDate = if (startDate != null && endDate != null) {
                             // Ensure the event start falls within the selected range (adding 24 hours in millis to the end date to include the full final day)
-                            event.startTimestamp >= startDate && event.startTimestamp <= (endDate + 86400000L)
+                            (event.startTimestamp >= startDate) && (event.startTimestamp <= (endDate + 86400000L))
                         } else {
                             true
                         }
@@ -310,7 +313,7 @@ fun CategoryFilterChip(category: EventCategory, isSelected: Boolean, onClick: ()
         EventCategory.HEALTH_WELLNESS -> Pair(Color(0xFF89F5E7), Color(0xFF005C54))
         EventCategory.FOOD_DRINK -> Pair(Color(0xFFFFF2E5), Color(0xFF4A2500))
         EventCategory.ARTS_CULTURE -> Pair(Color(0xFFFFE5CC), Color(0xFF4A2500))
-        else -> Pair(Color.White, Color(0xFF05345C))
+        else -> Pair(Color(0xFFE5EEFF), Color(0xFF5450C1))
     }
 
     val backgroundColor = if (isSelected) chipColors.first else Color.White
@@ -385,11 +388,12 @@ fun EventCard(event: Event, onClick: () -> Unit) {
                         .padding(12.dp)
                         .align(Alignment.TopEnd)
                         .size(36.dp)
-                        .background(Color.White.copy(alpha = 0.95f), CircleShape),
+                        .background(Color.White.copy(alpha = 0.95f), CircleShape)
+                        .clickable { /* TODO: Save Event (Phase 6.4) */ },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        Icons.Default.DateRange, // Placeholder for Bookmark icon
+                        Icons.Default.FavoriteBorder, // Placeholder for Bookmark icon
                         contentDescription = "Save Event",
                         tint = Color(0xFF5450C1),
                         modifier = Modifier.size(18.dp)
@@ -398,10 +402,11 @@ fun EventCard(event: Event, onClick: () -> Unit) {
             }
 
             Column(modifier = Modifier.padding(20.dp)) {
-                // Tags and Info Row
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                // Tags and Info Row using FlowRow for responsive wrapping
+                @OptIn(ExperimentalLayoutApi::class)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     // Category Tag
                     Box(
@@ -418,8 +423,13 @@ fun EventCard(event: Event, onClick: () -> Unit) {
                     }
 
                     // Price Tag
+                    val costValue = event.cost
                     Text(
-                        text = if ((event.cost == null || event.cost == 0.0)) "Free" else "$${String.format(Locale.getDefault(), "%.2f", event.cost)}",
+                        text = when {
+                            costValue == null -> "Price N/A"
+                            costValue == 0.0 -> "Free"
+                            else -> "$${String.format(Locale.getDefault(), "%.2f", costValue)}"
+                        },
                         color = Color(0xFF3D618C),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium
@@ -435,7 +445,9 @@ fun EventCard(event: Event, onClick: () -> Unit) {
                             text = "Source: ${event.source.displayName}",
                             color = Color(0xFF3D618C),
                             fontSize = 10.sp,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
+                            maxLines = 1,
+                            softWrap = false
                         )
                     }
                 }
@@ -487,4 +499,15 @@ fun EventCard(event: Event, onClick: () -> Unit) {
             }
         }
     }
+}
+
+private fun parseCategories(categoryString: String?): Set<EventCategory> {
+    if (categoryString == null || categoryString.trim().isEmpty()) return emptySet()
+    return categoryString.split(",").mapNotNull { name ->
+        try {
+            EventCategory.valueOf(name.trim())
+        } catch (_: Exception) {
+            null
+        }
+    }.toSet()
 }

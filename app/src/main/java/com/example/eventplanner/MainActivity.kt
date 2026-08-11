@@ -42,14 +42,21 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("search_home") {
                             SearchHomeScreen(
-                                onSearchClicked = { city, start, end ->
+                                onSearchClicked = { city, categories, start, end ->
                                     val encodedCity = URLEncoder.encode(city, StandardCharsets.UTF_8.toString())
-                                    val route = "search_results/$encodedCity" +
-                                        if (start != null) {
-                                            val finalEnd = end ?: start
-                                            "?start=$start&end=$finalEnd"
-                                        } else ""
-                                    navController.navigate(route)
+                                    val queryParams = mutableListOf<String>()
+                                    if (start != null) {
+                                        val finalEnd = end ?: start
+                                        queryParams.add("start=$start")
+                                        queryParams.add("end=$finalEnd")
+                                    }
+                                    if (categories.isNotEmpty()) {
+                                        val categoryString = categories.joinToString(",") { it.name }
+                                        val encodedCategory = URLEncoder.encode(categoryString, StandardCharsets.UTF_8.toString())
+                                        queryParams.add("category=$encodedCategory")
+                                    }
+                                    val queryString = if (queryParams.isNotEmpty()) "?" + queryParams.joinToString("&") else ""
+                                    navController.navigate("search_results/$encodedCity$queryString")
                                 },
                                 onTrendingCategoryClicked = { city, category, start, end ->
                                     val encodedCity = URLEncoder.encode(city, StandardCharsets.UTF_8.toString())

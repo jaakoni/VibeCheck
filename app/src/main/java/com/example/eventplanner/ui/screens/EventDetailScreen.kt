@@ -2,9 +2,9 @@ package com.example.eventplanner.ui.screens
 
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -152,7 +152,7 @@ fun EventDetailScreen(
                         // 2. Overlapping Header Info Card
                         HeaderInfoCard(event = event) {
                             // Buy ticket action
-                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(event.sourceUrl))
+                            val browserIntent = Intent(Intent.ACTION_VIEW, event.sourceUrl.toUri())
                             context.startActivity(browserIntent)
                         }
 
@@ -182,11 +182,6 @@ fun EventDetailScreen(
 
                             // 6. Hosted By Section
                             HostedBySection(organizerName = event.organizerName ?: "VibeCheck Creator")
-
-                            Spacer(modifier = Modifier.height(32.dp))
-
-                            // 7. You Might Like Section (Figma recommendations placeholder)
-                            YouMightLikeSection()
 
                             Spacer(modifier = Modifier.height(40.dp))
                         }
@@ -275,12 +270,15 @@ fun HeaderInfoCard(event: Event, onRegisterClick: () -> Unit) {
                     val dateString = if (event.startTimestamp != 0L) {
                         val formatter = SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault())
                         formatter.format(Date(event.startTimestamp))
-                    } else "Sunday, September 18, 2024"
+                    } else {
+                        val formatter = SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault())
+                        formatter.format(Date())
+                    }
 
                     val timeString = if (event.startTimestamp != 0L) {
                         val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
                         formatter.format(Date(event.startTimestamp))
-                    } else "09:00 AM"
+                    } else "Time TBA"
 
                     Text(text = dateString, fontWeight = FontWeight.Bold, color = Color(0xFF05345C), fontSize = 14.sp)
                     Text(text = timeString, color = Color(0xFF3D618C), fontSize = 12.sp)
@@ -567,7 +565,7 @@ fun LocationMapSection(event: Event) {
                 OutlinedButton(
                     onClick = {
                         val uriStr = "geo:$lat,$lon?q=${Uri.encode(event.location.venueName + ", " + event.location.address)}"
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uriStr)).apply {
+                        val intent = Intent(Intent.ACTION_VIEW, uriStr.toUri()).apply {
                             setPackage("com.google.android.apps.maps")
                         }
                         context.startActivity(intent)
@@ -631,80 +629,6 @@ fun HostedBySection(organizerName: String) {
             Column {
                 Text(text = organizerName, fontWeight = FontWeight.Bold, color = Color(0xFF05345C), fontSize = 14.sp)
                 Text(text = "Official Event Host", color = Color(0xFF3D618C), fontSize = 12.sp)
-            }
-        }
-    }
-}
-
-@Composable
-fun YouMightLikeSection() {
-    Column {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = "You might like",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF05345C)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(1.dp)
-                    .background(Color(0xFFE5EEFF))
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Recommendations List mockups matching Figma
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            RecommendationRow(date = "Oct 28", title = "Next Gen Founders Forum", place = "Downtown Tech Hub")
-            RecommendationRow(date = "Nov 02", title = "Acoustic Nights Under the Stars", place = "Amphitheater Plaza")
-        }
-    }
-}
-
-@Composable
-fun RecommendationRow(date: String, title: String, place: String) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Recommendation thumbnail mockup
-            Box(
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFF2F6FF)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = date,
-                    color = Color(0xFF5450C1),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 16.sp
-                )
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column {
-                Text(text = title, fontWeight = FontWeight.Bold, color = Color(0xFF05345C), fontSize = 14.sp, maxLines = 1)
-                Text(text = place, color = Color(0xFF3D618C), fontSize = 12.sp)
             }
         }
     }

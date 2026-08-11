@@ -36,7 +36,7 @@ import com.example.eventplanner.viewmodel.TrendingVibesState
 @Composable
 fun SearchHomeScreen(
     viewModel: SearchHomeViewModel = viewModel(),
-    onSearchClicked: (city: String, start: Long?, end: Long?) -> Unit,
+    onSearchClicked: (city: String, categories: Set<EventCategory>, start: Long?, end: Long?) -> Unit,
     onTrendingCategoryClicked: (city: String, category: EventCategory, start: Long, end: Long) -> Unit
 ) {
     val searchCriteria by viewModel.searchCriteria.collectAsState()
@@ -104,7 +104,7 @@ fun SearchHomeScreen(
                             },
                             placeholder = { Text("Enter City", color = Color.DarkGray) },
                             leadingIcon = { Icon(Icons.Default.LocationOn, contentDescription = "Location") },
-                            modifier = Modifier.menuAnchor().fillMaxWidth(),
+                            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true).fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp),
                             singleLine = true,
                             colors = OutlinedTextFieldDefaults.colors(
@@ -182,9 +182,9 @@ fun SearchHomeScreen(
                     Button(
                         onClick = { 
                             viewModel.onSearchClicked()
-                            // Pass the actual selected city, start date, and end date to the navigation action (fallback to Atlanta if empty)
+                            // Pass the actual selected city, categories, start date, and end date to the navigation action (fallback to Atlanta if empty)
                             val selectedCity = searchCriteria.city.ifEmpty { "Atlanta" }
-                            onSearchClicked(selectedCity, searchCriteria.startDateMillis, searchCriteria.endDateMillis)
+                            onSearchClicked(selectedCity, searchCriteria.selectedCategories, searchCriteria.startDateMillis, searchCriteria.endDateMillis)
                         },
                         modifier = Modifier
                             .fillMaxWidth()

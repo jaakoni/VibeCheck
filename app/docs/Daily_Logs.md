@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > **AI AGENT RULES OF ENGAGEMENT**
 > 1. **Always update the Daily Log:** Whenever making changes to *any* file, add an entry to this `Daily_Logs.md` documenting what was done.
-> 2. **Save Implementation Plans:** Create a real `.md` file inside the `app/implementation_plans/` folder for every Implementation Plan or Walkthrough so it persists in version control and prevents context loss due to AI Assistant cache resets.
+> 2. **Save Implementation Plans:** Create a real `.md` file inside the `app/implementation_plans/` folder for every Implementation Plan or Walkthrough so it persists in version control and persists across AI Assistant cache resets.
 > 3. **Cross-reference in the Daily Log:** Inside the `Daily_Logs.md` entry, explicitly mention and link to the specific implementation plan file (e.g., `app/implementation_plans/Trending_Vibes_Plan.md`) so that future agents know exactly where to find the detailed context of the changes.
 
 ## 2025-05-15
@@ -109,3 +109,54 @@
 
 ### Reference Documents
 - **Plan Details:** See `app/docs/Fix_Hardcoded_Dates_Plan.md`, `app/docs/Home_Screen_Contrast_Plan.md`, `app/implementation_plans/Trending_Vibes_Plan.md`, and `app/implementation_plans/Category_Preselection_Bug_Plan.md` for the full implementation plans.
+## 2026-08-03
+### Completed Tasks
+- **Hardcoded Data Audit Fixes**
+    - Updated `TicketmasterApiService.kt` to include `priceRanges`.
+    - Updated `TicketmasterRepository.kt` to extract minimum price and map it to `cost`, and updated description fallback to "Description from Ticketmaster not available".
+    - Updated `SearchResultsScreen.kt` to conditionally display "Pricing data unavailable" or "Free" based on the `cost` variable.
+    - Fixed Bookmark icon placeholder in `SearchResultsScreen.kt` to use `Icons.Default.FavoriteBorder` and be clickable (no-op until Phase 6.4).
+    - Removed arbitrary fallback dates ("Sunday, September 18, 2024") in `EventDetailScreen.kt`, replaced with current date and "Time TBA".
+    - Fixed missing `classifications` in `TicketmasterRepositoryTest.kt` mock response to satisfy the mapping tests properly.
+- **Bug Fix: Category Carryover Navigation**
+    - Updated `SearchHomeScreen.kt` to pass `selectedCategories` into `onSearchClicked`.
+    - Updated `MainActivity.kt` navigation routing to append `?category=CATEGORY_NAME` query parameter when searching events with a category selected.
+    - Updated `SearchResultsScreen.kt` to initialize `selectedCategoryFilter` with `remember(initialCategory)` so the selected category carries over seamlessly upon navigation.
+
+### Reference Documents
+- **Plan Details:** See [`app/implementation_plans/Hardcoded_Data_Fixes_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Hardcoded_Data_Fixes_Plan.md) and [`app/implementation_plans/Category_Carryover_Fix_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Category_Carryover_Fix_Plan.md) for full context.
+
+## 2026-08-04
+### Completed Tasks
+- **Bug Fix: Category Pill Visual Selection & Multi-Category Persistence**
+    - Fixed an issue in `CategoryFilterChip` where 6 of the 10 categories (e.g. Sports & Recreation, Family, Workshops) evaluated `else -> Pair(Color.White, Color(0xFF05345C))`, rendering selected chips with `Color.White` background so they appeared unselected.
+    - Changed default active chip background for `else` categories to `Color(0xFFE5EEFF)` with `Color(0xFF5450C1)` text so selected pills stand out clearly.
+    - Updated `MainActivity.kt` to pass all selected categories in navigation as a comma-separated string (e.g. `SPORTS_RECREATION,NIGHTLIFE`).
+    - Updated `SearchResultsScreen.kt` state to `selectedCategoryFilters: Set<EventCategory>` and added `parseCategories()` helper to support multi-category pill selection and filtering on the results page.
+- **UI Bug Fix: Source Badge Overflow in EventCard**
+    - Replaced `Row` with Compose `FlowRow` for tag layouts inside `EventCard` on `SearchResultsScreen.kt` to allow tags to wrap onto a second line gracefully on smaller/narrow screens.
+    - Added `maxLines = 1` and `softWrap = false` to the Source Badge text so it never wraps across multiple vertical lines inside the pill.
+    - Shortened fallback price text from "Pricing data unavailable" to "Price N/A" to prevent layout overflow.
+
+### Reference Documents
+- **Plan Details:** See [`app/implementation_plans/Fix_Category_Pill_Selection_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Fix_Category_Pill_Selection_Plan.md) and [`app/implementation_plans/Fix_Source_Badge_Overflow_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Fix_Source_Badge_Overflow_Plan.md) for the full context of these changes.
+
+## 2026-08-06
+### Completed Tasks
+- **UI Clean-up: Removed Hardcoded "You Might Like" Section**
+    - Removed the static hardcoded recommendations mockup section (`YouMightLikeSection` and `RecommendationRow`) from `EventDetailScreen.kt`.
+
+### Reference Documents
+- **Plan Details:** See [`app/implementation_plans/Remove_You_Might_Like_Section_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Remove_You_Might_Like_Section_Plan.md) for full details.
+
+## 2026-08-10
+### Completed Tasks
+- **Code Inspection & Pre-commit Warnings Clean-up**
+    - Cleaned up deprecated Material 3 API usage (`Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true)`).
+    - Removed unused imports and unused exception parameter bindings (`catch (_: Exception)`).
+    - Replaced `for (i in 0 until 7)` loop with `repeat(7)`.
+    - Replaced `Uri.parse(...)` with Kotlin KTX `.toUri()`.
+    - Cleaned up type parameters and expression parentheses across `SearchHomeScreen.kt`, `SearchResultsScreen.kt`, `EventDetailScreen.kt`, `SearchHomeViewModel.kt`, and `TicketmasterRepository.kt`.
+
+### Reference Documents
+- **Plan Details:** See [`app/implementation_plans/Fix_Precommit_Warnings_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Fix_Precommit_Warnings_Plan.md) for full details.

@@ -25,7 +25,16 @@ data class TicketmasterEvent(
     val description: String? = null,
     val dates: TicketmasterDates? = null,
     val classifications: List<TicketmasterClassification>? = null,
+    val priceRanges: List<TicketmasterPriceRange>? = null,
     val _embedded: TicketmasterEventEmbedded? = null
+)
+
+@Serializable
+data class TicketmasterPriceRange(
+    val type: String? = null,
+    val currency: String? = null,
+    val min: Double? = null,
+    val max: Double? = null
 )
 
 @Serializable

@@ -73,13 +73,13 @@ class TicketmasterRepository(private val apiKey: String) {
         return Event(
             id = tmEvent.id,
             title = tmEvent.name,
-            description = tmEvent.description ?: "Join us for an immersive experience! Check out the event website for more details about scheduling, speakers, and special features.",
+            description = tmEvent.description ?: "Description from Ticketmaster not available",
             source = EventSource.TICKETMASTER,
             sourceUrl = tmEvent.url,
             category = mappedCategory,
             startTimestamp = startTimestamp,
             endTimestamp = null,
-            cost = null,
+            cost = tmEvent.priceRanges?.firstOrNull()?.min,
             imageUrls = imageUrls,
             location = Location(
                 venueName = venueName,
@@ -106,7 +106,7 @@ class TicketmasterRepository(private val apiKey: String) {
             format.timeZone = java.util.TimeZone.getTimeZone("UTC")
             val date = format.parse("$localDate $formattedTimeStr")
             date?.time ?: 0L
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             0L
         }
     }
