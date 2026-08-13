@@ -1,6 +1,11 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.eventplanner.ui.screens
 
+import android.app.Activity
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialCancellationException
@@ -23,10 +28,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.eventplanner.viewmodel.AuthUiState
 import com.example.eventplanner.viewmodel.AuthViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.launch
+import java.security.MessageDigest
+import java.util.UUID
 
+@Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
@@ -38,6 +49,26 @@ fun LoginScreen(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val uiState by authViewModel.uiState.collectAsState()
+
+    // Fallback Intent Launcher for Google Sign-In if Credential Manager has no cached credentials
+    val legacyGoogleSignInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                val idToken = account?.idToken
+                if (idToken != null) {
+                    authViewModel.signInWithGoogle(idToken)
+                } else {
+                    Toast.makeText(context, "Failed to get Google ID Token", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: ApiException) {
+                Toast.makeText(context, "Google Sign-In failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     LaunchedEffect(uiState) {
         when (val state = uiState) {
@@ -51,6 +82,15 @@ fun LoginScreen(
             }
             else -> {}
         }
+    }
+
+    fun launchLegacyGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(webClientId)
+            .requestEmail()
+            .build()
+        val googleSignInClient = GoogleSignIn.getClient(context, gso)
+        legacyGoogleSignInLauncher.launch(googleSignInClient.signInIntent)
     }
 
     Scaffold(
@@ -116,7 +156,7 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(48.dp))
 
-                // Modern Credential Manager Sign-In Button
+                // Modern Credential Manager Sign-In Button with Legacy Intent Fallback
                 val isLoading = uiState is AuthUiState.Loading
 
                 Button(
@@ -124,9 +164,16 @@ fun LoginScreen(
                         coroutineScope.launch {
                             val credentialManager = CredentialManager.create(context)
                             
+                            val rawNonce = UUID.randomUUID().toString()
+                            val bytes = rawNonce.toByteArray()
+                            val md = MessageDigest.getInstance("SHA-256")
+                            val digest = md.digest(bytes)
+                            val hashedNonce = digest.fold("") { str, it -> str + "%02x".format(it) }
+
                             val googleIdOption = GetGoogleIdOption.Builder()
                                 .setFilterByAuthorizedAccounts(filterByAuthorizedAccounts = false)
                                 .setServerClientId(webClientId)
+                                .setNonce(hashedNonce)
                                 .setAutoSelectEnabled(autoSelectEnabled = false)
                                 .build()
 
@@ -145,10 +192,11 @@ fun LoginScreen(
                                 authViewModel.signInWithGoogle(idToken)
                             } catch (_: GetCredentialCancellationException) {
                                 // User cancelled the sign-in sheet
-                            } catch (e: GetCredentialException) {
-                                Toast.makeText(context, "Sign-in error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-                            } catch (e: Exception) {
-                                Toast.makeText(context, "Authentication failed: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                            } catch (_: GetCredentialException) {
+                                // Fallback to standard Google Sign-In launcher
+                                launchLegacyGoogleSignIn()
+                            } catch (_: Exception) {
+                                launchLegacyGoogleSignIn()
                             }
                         }
                     },

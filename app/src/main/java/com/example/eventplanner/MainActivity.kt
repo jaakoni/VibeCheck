@@ -136,7 +136,14 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onEventClick = { event ->
                                     navController.navigate("event_detail/${event.id}")
-                                }
+                                },
+                                onProfileClick = {
+                                    if (currentUser != null) {
+                                        navController.navigate("profile")
+                                    } else {
+                                        navController.navigate("login")
+                                    }
+                                },
                             )
                         }
 

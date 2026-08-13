@@ -45,6 +45,7 @@ fun SearchResultsScreen(
     initialCategory: String? = null,
     onBackClick: () -> Unit,
     onEventClick: (Event) -> Unit,
+    onProfileClick: () -> Unit = {},
     viewModel: SearchResultsViewModel = viewModel(),
 ) {
     var selectedDayFilter by remember { mutableStateOf("All Days") }
@@ -106,7 +107,7 @@ fun SearchResultsScreen(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
             )
         },
-        bottomBar = { BottomNavigationPlaceholder() },
+        bottomBar = { BottomNavigationPlaceholder(onProfileClick = onProfileClick) },
     ) { paddingValues ->
         Column(
             modifier = Modifier

@@ -36,16 +36,25 @@ fun ProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Your Profile", fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        text = "Your Profile",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF05345C),
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color(0xFF05345C))
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White,
+                    titleContentColor = Color(0xFF05345C),
+                ),
             )
         },
-        bottomBar = { BottomNavigationPlaceholder() },
+        bottomBar = { BottomNavigationPlaceholder(onProfileClick = { /* Already on profile */ }) },
     ) { paddingValues ->
         Column(
             modifier = Modifier

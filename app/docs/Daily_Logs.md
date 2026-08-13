@@ -159,3 +159,13 @@
 
 ### Reference Documents
 - **Plan Details:** See [`app/implementation_plans/Migrate_To_Credential_Manager_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Migrate_To_Credential_Manager_Plan.md) for full details.
+
+## 2026-08-12
+### Completed Tasks
+- **UI Polish & Navigation Wiring**:
+    - Updated "Your Profile" header title text color in `ProfileScreen.kt` to dark navy (`Color(0xFF05345C)`).
+    - Wired `onProfileClick` across `SearchResultsScreen.kt` and `MainActivity.kt` so tapping "Profile" or "Saved" on the bottom navigation bar routes users to `ProfileScreen` (if authenticated) or `LoginScreen` (if unauthenticated).
+    - Added `@file:Suppress("DEPRECATION")` to `LoginScreen.kt` so file-level imports for legacy fallback Google Sign-in do not generate IDE/compiler warnings.
+
+### Reference Documents
+- **Plan Details:** See [`app/implementation_plans/Fix_Profile_Color_And_BottomNav_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Fix_Profile_Color_And_BottomNav_Plan.md) for full details.
