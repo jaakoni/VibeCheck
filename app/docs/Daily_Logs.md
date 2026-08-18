@@ -169,3 +169,16 @@
 
 ### Reference Documents
 - **Plan Details:** See [`app/implementation_plans/Fix_Profile_Color_And_BottomNav_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Fix_Profile_Color_And_BottomNav_Plan.md) for full details.
+
+## 2026-08-16
+### Completed Tasks
+- **Feature: Event Bookmarking & Saving to Profile (Phase 6.4)**
+    - Created `SavedEventsRepository.kt` managing real-time Firestore persistence under `users/{userId}/savedEvents/{eventId}`.
+    - Created `SavedEventsViewModel.kt` exposing reactive flows for `savedEvents` and `savedEventIds`.
+    - Connected interactive Heart / Bookmark icon on `SearchResultsScreen.kt`:
+      - Shows filled heart (`#E91E63`) when saved, and outline heart (`#5450C1`) when unsaved.
+      - Prompts unauthenticated users with an AlertDialog ("Sign In" vs "Continue Exploring").
+    - Overhauled `ProfileScreen.kt` with live saved events list matching `savedEvents.html` design (floating date badge, source tags, price, and instant unsave button).
+
+### Reference Documents
+- **Plan Details:** See [`app/implementation_plans/Phase_6_4_Saved_Events_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Phase_6_4_Saved_Events_Plan.md) for full details.

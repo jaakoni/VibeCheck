@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -22,6 +23,7 @@ import com.example.eventplanner.ui.screens.SearchHomeScreen
 import com.example.eventplanner.ui.screens.SearchResultsScreen
 import com.example.eventplanner.ui.theme.EventPlannerTheme
 import com.example.eventplanner.viewmodel.AuthViewModel
+import com.example.eventplanner.viewmodel.SavedEventsViewModel
 import com.google.android.libraries.places.api.Places
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -42,7 +44,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     val authViewModel: AuthViewModel = viewModel()
+                    val savedEventsViewModel: SavedEventsViewModel = viewModel()
                     val currentUser by authViewModel.currentUser.collectAsState()
+
+                    LaunchedEffect(currentUser) {
+                        savedEventsViewModel.setUser(currentUser)
+                    }
 
                     NavHost(
                         navController = navController,
@@ -101,6 +108,7 @@ class MainActivity : ComponentActivity() {
                         composable("profile") {
                             ProfileScreen(
                                 authViewModel = authViewModel,
+                                savedEventsViewModel = savedEventsViewModel,
                                 onBackClick = {
                                     navController.popBackStack()
                                 },
@@ -108,6 +116,9 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate("search_home") {
                                         popUpTo("search_home") { inclusive = true }
                                     }
+                                },
+                                onEventClick = { event ->
+                                    navController.navigate("event_detail/${event.id}")
                                 },
                             )
                         }
@@ -131,6 +142,8 @@ class MainActivity : ComponentActivity() {
                                 startDate = if (start != -1L) start else null,
                                 endDate = if (end != -1L) end else null,
                                 initialCategory = categoryStr,
+                                currentUser = currentUser,
+                                savedEventsViewModel = savedEventsViewModel,
                                 onBackClick = {
                                     navController.popBackStack()
                                 },
@@ -143,6 +156,9 @@ class MainActivity : ComponentActivity() {
                                     } else {
                                         navController.navigate("login")
                                     }
+                                },
+                                onNavigateToLogin = {
+                                    navController.navigate("login")
                                 },
                             )
                         }

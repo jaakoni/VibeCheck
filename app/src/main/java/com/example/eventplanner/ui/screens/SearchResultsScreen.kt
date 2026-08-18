@@ -36,6 +36,10 @@ import com.example.eventplanner.model.EventSource
 import com.example.eventplanner.viewmodel.SearchResultsUiState
 import com.example.eventplanner.viewmodel.SearchResultsViewModel
 
+import androidx.compose.material.icons.filled.Favorite
+import com.example.eventplanner.viewmodel.SavedEventsViewModel
+import com.google.firebase.auth.FirebaseUser
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchResultsScreen(
@@ -43,11 +47,17 @@ fun SearchResultsScreen(
     startDate: Long? = null,
     endDate: Long? = null,
     initialCategory: String? = null,
+    currentUser: FirebaseUser? = null,
+    savedEventsViewModel: SavedEventsViewModel = viewModel(),
     onBackClick: () -> Unit,
     onEventClick: (Event) -> Unit,
     onProfileClick: () -> Unit = {},
+    onNavigateToLogin: () -> Unit = {},
     viewModel: SearchResultsViewModel = viewModel(),
 ) {
+    var showAuthPromptDialog by remember { mutableStateOf(false) }
+    val savedEventIds by savedEventsViewModel.savedEventIds.collectAsState()
+
     var selectedDayFilter by remember { mutableStateOf("All Days") }
     var selectedCategoryFilters by remember(initialCategory) {
         mutableStateOf(
@@ -109,6 +119,44 @@ fun SearchResultsScreen(
         },
         bottomBar = { BottomNavigationPlaceholder(onProfileClick = onProfileClick) },
     ) { paddingValues ->
+        if (showAuthPromptDialog) {
+            AlertDialog(
+                onDismissRequest = { showAuthPromptDialog = false },
+                title = {
+                    Text(
+                        text = "Sign In Required",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF05345C),
+                    )
+                },
+                text = {
+                    Text(
+                        text = "Sign in to save events to your profile and track your vibes across devices.",
+                        color = Color(0xFF3D618C),
+                        fontSize = 14.sp,
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            showAuthPromptDialog = false
+                            onNavigateToLogin()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5450C1)),
+                        shape = RoundedCornerShape(12.dp),
+                    ) {
+                        Text("Sign In", color = Color.White, fontWeight = FontWeight.Bold)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showAuthPromptDialog = false }) {
+                        Text("Continue Exploring", color = Color(0xFF3D618C))
+                    }
+                },
+                containerColor = Color.White,
+                shape = RoundedCornerShape(20.dp),
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -272,9 +320,19 @@ fun SearchResultsScreen(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             items(filteredEvents) { event ->
-                                EventCard(event = event) {
-                                    onEventClick(event)
-                                }
+                                val isSaved = savedEventIds.contains(event.id)
+                                EventCard(
+                                    event = event,
+                                    isSavedEvent = isSaved,
+                                    onBookmarkClick = {
+                                        savedEventsViewModel.toggleSaveEvent(
+                                            user = currentUser,
+                                            event = event,
+                                            onRequireAuth = { showAuthPromptDialog = true }
+                                        )
+                                    },
+                                    onClick = { onEventClick(event) }
+                                )
                             }
                         }
                     }
@@ -360,7 +418,12 @@ fun SourceChip(source: String, isSelected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-fun EventCard(event: Event, onClick: () -> Unit) {
+fun EventCard(
+    event: Event,
+    isSavedEvent: Boolean = false,
+    onBookmarkClick: () -> Unit = {},
+    onClick: () -> Unit,
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -383,20 +446,21 @@ fun EventCard(event: Event, onClick: () -> Unit) {
                     contentScale = ContentScale.Crop
                 )
 
-                // Bookmark icon mockup
+                // Heart / Bookmark save action
+                val isSaved = isSavedEvent
                 Box(
                     modifier = Modifier
                         .padding(12.dp)
                         .align(Alignment.TopEnd)
                         .size(36.dp)
                         .background(Color.White.copy(alpha = 0.95f), CircleShape)
-                        .clickable { /* TODO: Save Event (Phase 6.4) */ },
+                        .clickable { onBookmarkClick() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        Icons.Default.FavoriteBorder, // Placeholder for Bookmark icon
-                        contentDescription = "Save Event",
-                        tint = Color(0xFF5450C1),
+                        imageVector = if (isSaved) Icons.Filled.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = if (isSaved) "Unsave Event" else "Save Event",
+                        tint = if (isSaved) Color(0xFFE91E63) else Color(0xFF5450C1),
                         modifier = Modifier.size(18.dp)
                     )
                 }
