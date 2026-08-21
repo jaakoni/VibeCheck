@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.eventplanner"
+    namespace = "com.vibecheck.events"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.eventplanner"
+        applicationId = "com.vibecheck.events"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -36,6 +36,9 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    lint {
+        disable.add("OldTargetApi")
     }
     packaging {
         resources.excludes.add("META-INF/LICENSE.md")

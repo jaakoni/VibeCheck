@@ -8,8 +8,8 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.eventplanner" />
-                  <option name="mobileSdkAppId" value="1:960871076699:android:b415392edfd70e1534c07e" />
+                  <option name="appId" value="com.vibecheck.events" />
+                  <option name="mobileSdkAppId" value="1:960871076699:android:d29b0155d00ae67634c07e" />
                   <option name="projectId" value="vibecheck-d5415" />
                   <option name="projectNumber" value="960871076699" />
                 </ConnectionSetting>

@@ -1,0 +1,133 @@
+package com.vibecheck.events.network
+
+import kotlinx.serialization.Serializable
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
+
+// Ticketmaster Models for Serialization
+@Serializable
+data class TicketmasterResponse(
+    val _embedded: EmbeddedEvents? = null
+)
+
+@Serializable
+data class EmbeddedEvents(
+    val events: List<TicketmasterEvent>
+)
+
+@Serializable
+data class TicketmasterEvent(
+    val id: String,
+    val name: String,
+    val url: String,
+    val images: List<TicketmasterImage> = emptyList(),
+    val description: String? = null,
+    val dates: TicketmasterDates? = null,
+    val classifications: List<TicketmasterClassification>? = null,
+    val priceRanges: List<TicketmasterPriceRange>? = null,
+    val promoters: List<TicketmasterPromoter>? = null,
+    val _embedded: TicketmasterEventEmbedded? = null
+)
+
+@Serializable
+data class TicketmasterPromoter(
+    val id: String? = null,
+    val name: String? = null,
+    val description: String? = null
+)
+
+@Serializable
+data class TicketmasterPriceRange(
+    val type: String? = null,
+    val currency: String? = null,
+    val min: Double? = null,
+    val max: Double? = null
+)
+
+@Serializable
+data class TicketmasterClassification(
+    val segment: TicketmasterSegment? = null,
+    val genre: TicketmasterGenre? = null
+)
+
+@Serializable
+data class TicketmasterSegment(
+    val name: String? = null
+)
+
+@Serializable
+data class TicketmasterGenre(
+    val name: String? = null
+)
+
+@Serializable
+data class TicketmasterImage(
+    val url: String
+)
+
+@Serializable
+data class TicketmasterDates(
+    val start: TicketmasterStartDates? = null
+)
+
+@Serializable
+data class TicketmasterStartDates(
+    val localDate: String? = null,
+    val localTime: String? = null
+)
+
+@Serializable
+data class TicketmasterEventEmbedded(
+    val venues: List<TicketmasterVenue>? = null,
+    val attractions: List<TicketmasterAttraction>? = null
+)
+
+@Serializable
+data class TicketmasterAttraction(
+    val id: String? = null,
+    val name: String? = null,
+    val url: String? = null
+)
+
+@Serializable
+data class TicketmasterVenue(
+    val name: String? = null,
+    val address: TicketmasterAddress? = null,
+    val city: TicketmasterCity? = null,
+    val location: TicketmasterCoords? = null,
+    val timezone: String? = null
+)
+
+@Serializable
+data class TicketmasterAddress(
+    val line1: String? = null
+)
+
+@Serializable
+data class TicketmasterCity(
+    val name: String? = null
+)
+
+@Serializable
+data class TicketmasterCoords(
+    val latitude: String? = null,
+    val longitude: String? = null
+)
+
+interface TicketmasterApiService {
+    @GET("discovery/v2/events.json")
+    suspend fun searchEvents(
+        @Query("apikey") apiKey: String,
+        @Query("city") city: String,
+        @Query("startDateTime") startDateTime: String? = null,
+        @Query("endDateTime") endDateTime: String? = null,
+        @Query("size") size: Int = 20
+    ): TicketmasterResponse
+
+    @GET("discovery/v2/events/{id}.json")
+    suspend fun getEventDetails(
+        @Path("id") id: String,
+        @Query("apikey") apiKey: String
+    ): TicketmasterEvent
+}

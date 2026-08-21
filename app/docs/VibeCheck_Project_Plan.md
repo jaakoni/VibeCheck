@@ -36,11 +36,11 @@
 ## Phase 6: Quality Assurance & User Accounts
 *   **Step 6.1:** *Completed:* Create test plan & write automated unit and UI tests.
 *   **Step 6.2:** *Completed:* Run and execute the test plan on a stable API 33/34 emulator to verify green passes.
-*   **Step 6.3:** *Completed:* Enable login with Google OAuth.
-*   **Step 6.4:** *Completed:* Enable saving events to your profile.
+*   **Step 6.3:** *Pending:* Enable login with Google OAuth.
+*   **Step 6.4:** *Pending:* Enable saving events to your profile.
 
 ## Phase 7: Launch Preparation
-*   **Step 7.1:** *Completed:* Load app on physical device.
+*   **Step 7.1:** *Pending:* Load app on physical device.
     *   Enable Developer Options & USB Debugging on a real Android phone.
     *   Connect phone to computer and deploy directly from Android Studio.
     *   Verify hardware GPS coordinates, touch latency, and UI scale in-hand.

@@ -118,10 +118,6 @@
     - Fixed Bookmark icon placeholder in `SearchResultsScreen.kt` to use `Icons.Default.FavoriteBorder` and be clickable (no-op until Phase 6.4).
     - Removed arbitrary fallback dates ("Sunday, September 18, 2024") in `EventDetailScreen.kt`, replaced with current date and "Time TBA".
     - Fixed missing `classifications` in `TicketmasterRepositoryTest.kt` mock response to satisfy the mapping tests properly.
-- **Bug Fix: Category Carryover Navigation**
-    - Updated `SearchHomeScreen.kt` to pass `selectedCategories` into `onSearchClicked`.
-    - Updated `MainActivity.kt` navigation routing to append `?category=CATEGORY_NAME` query parameter when searching events with a category selected.
-    - Updated `SearchResultsScreen.kt` to initialize `selectedCategoryFilter` with `remember(initialCategory)` so the selected category carries over seamlessly upon navigation.
 
 ### Reference Documents
 - **Plan Details:** See [`app/implementation_plans/Hardcoded_Data_Fixes_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Hardcoded_Data_Fixes_Plan.md) and [`app/implementation_plans/Category_Carryover_Fix_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Category_Carryover_Fix_Plan.md) for full context.
@@ -182,3 +178,40 @@
 
 ### Reference Documents
 - **Plan Details:** See [`app/implementation_plans/Phase_6_4_Saved_Events_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Phase_6_4_Saved_Events_Plan.md) for full details.
+
+## 2026-08-19
+### Completed Tasks
+- **Package Name & Application ID Migration to `com.vibecheck.events` (Phase 7.2 Prep)**
+    - Updated `applicationId = "com.vibecheck.events"` and `namespace = "com.vibecheck.events"` in `app/build.gradle.kts`.
+    - Refactored all source files across `main`, `test`, and `androidTest` into `com/vibecheck/events/` directory structure.
+    - Updated all package statements and imports project-wide.
+    - Synchronized Gradle and updated `google-services.json` to reflect the production package identifier.
+
+### Reference Documents
+- **Plan Details:** See [`app/implementation_plans/Package_Name_Migration_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Package_Name_Migration_Plan.md) for full details.
+
+## 2026-08-20
+### Completed Tasks
+- **Bug Fix: Ticketmaster Organizer / Performer Mapping**:
+    - Updated `TicketmasterApiService.kt` models (`TicketmasterAttraction`, `TicketmasterPromoter`) to capture performers, artists, teams, and promoter data from Ticketmaster API.
+    - Updated `TicketmasterRepository.kt` mapping logic to prioritize the primary attraction/performer or promoter for `organizerName` instead of duplicating `venueName`.
+    - Appended performer names to event `tags`.
+    - Updated unit tests in `TicketmasterRepositoryTest.kt` to verify performer mapping.
+
+### Reference Documents
+- **Plan Details:** See [`app/implementation_plans/Fix_Organizer_And_Attractions_Mapping_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Fix_Organizer_And_Attractions_Mapping_Plan.md) for full details.
+
+## 2026-08-21
+### Completed Tasks
+- **Core Reliability & Accuracy Fixes (Claude Audit P1–P3)**:
+    - **Timezone Parsing**: Added `timezone` to `TicketmasterVenue` and updated `parseTmDate` in `TicketmasterRepository.kt` to parse local dates using the venue's timezone ID (or device default) rather than assuming UTC.
+    - **Exception Propagation**: Removed `try/catch` swallowing in `TicketmasterRepository.kt` so network failures properly trigger error states across ViewModels.
+    - **Neutral Category Fallback**: Changed unclassified event fallback from `NIGHTLIFE` to `COMMUNITY_FESTIVALS` to avoid skewing Trending Vibes.
+    - **Cleaned Placeholder Content**: Removed fake conference copy and fake bullet points from `AboutSection` in `EventDetailScreen.kt`.
+    - **Map Fallback for Missing Coords**: Replaced hardcoded San Francisco coordinates with a clean fallback message and conditionally hide the "Get Directions" button when coordinates are `0.0`.
+    - **Robust Day Filtering**: Refactored `SearchResultsScreen.kt` day selector to compare calendar day-of-year rather than locale formatted display strings.
+    - **Cleaned Dead Code**: Removed unused `onSearchClicked()` debug method and calls.
+    - **Pre-commit Warnings Clean-up**: Resolved unused imports, clarified boolean expressions, cleaned indexing syntax, and removed unused null-checks.
+
+### Reference Documents
+- **Plan Details:** See [`app/implementation_plans/Fix_Claude_Audit_Issues_Plan.md`](file:///Users/beast/Vibe Coding/VibeCheck/AndroidStudioProjects/EventPlanner/app/implementation_plans/Fix_Claude_Audit_Issues_Plan.md) for full details.
